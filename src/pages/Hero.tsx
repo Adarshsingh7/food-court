@@ -1,7 +1,8 @@
 /** @format */
+import Header from '../components/Header.tsx';
 
 function Hero() {
-	return <div>Hero</div>;
+	return <Header />;
 }
 
 export default Hero;

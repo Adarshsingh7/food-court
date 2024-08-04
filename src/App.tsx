@@ -1,7 +1,24 @@
 /** @format */
 
-function App() {
-	return <div className='bg-green-600'>App</div>;
-}
+import { FC } from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import AppLayout from './AppLayout';
+import Hero from './pages/Hero';
+
+const router = createBrowserRouter([
+	{
+		element: <AppLayout />,
+		children: [
+			{
+				path: '/',
+				element: <Hero />,
+			},
+		],
+	},
+]);
+
+const App: FC = function () {
+	return <RouterProvider router={router} />;
+};
 
 export default App;

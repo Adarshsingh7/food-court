@@ -23,7 +23,7 @@ const Hero: FC = () => {
               <p className="text-gray-700 text-sm md:text-md mt-2">
                 We have the best products in the market all right to you
               </p>
-              <Button additionalClasses='md:w-[50%]'>Shop Now</Button>
+              <Button additionalClasses="md:w-[50%]">Shop Now</Button>
             </div>
           </div>
         </div>
@@ -36,18 +36,14 @@ const Hero: FC = () => {
             <ProductCard />
           </div>
         </SectionWrapper>
-      </div >
+      </div>
     </>
   );
 };
 
 const SectionWrapper: FC<PropsWithChildren> = ({ children }) => {
-  return (
-    < SectionWrapper >
-      {children}
-    </SectionWrapper >
-  )
-}
+  return <div className="section-wrapper">{children}</div>;
+};
 
 const MainHeading: FC<PropsWithChildren> = ({ children }) => {
   return (

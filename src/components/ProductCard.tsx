@@ -3,7 +3,7 @@
 import { FC, useState } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import { Button, IconButton } from "./Button";
+import { IconButton } from "./Button";
 
 const ProductCard: FC = function () {
   const [quantity, setQuantity] = useState(1);

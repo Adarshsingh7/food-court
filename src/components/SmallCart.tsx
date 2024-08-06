@@ -7,7 +7,6 @@ import Button from "@mui/material/Button";
 const EnhancedSnackbar: React.FC = () => {
   const [open, setOpen] = useState(true);
 
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const handleOpenCart = () => {

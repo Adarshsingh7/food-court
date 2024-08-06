@@ -3,11 +3,13 @@ import { Button } from "./../components/Button.tsx";
 import Header from "../components/Header.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { FC, PropsWithChildren } from "react";
+import SmallCart from "../components/SmallCart.tsx";
 
 const Hero: FC = () => {
   return (
     <>
       <Header />
+      <SmallCart />
       <div className="md:px-20 px-2 py-10 color-black">
         <div className="relative mb-14">
           <img
@@ -47,7 +49,7 @@ const SectionWrapper: FC<PropsWithChildren> = ({ children }) => {
 
 const MainHeading: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <div className="md:text-4xl sm:text-2xl text-2xl font-bold text-gray-700 mx-2">
+    <div className="md:text-4xl sm:text-2xl text-2xl font-bold text-gray-800 mx-2">
       <h1 className="my-4">{children}</h1>
     </div>
   );

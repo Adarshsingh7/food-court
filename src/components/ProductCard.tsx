@@ -42,7 +42,7 @@ const ProductCard: FC = function () {
                 <AddCircleIcon />
               </IconButton>
             </div>
-            <Button>Add</Button>
+            {/* <Button>Add</Button> */}
           </div>
         </span>
       </div>

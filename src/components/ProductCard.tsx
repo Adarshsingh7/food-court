@@ -24,7 +24,7 @@ const ProductCard: FC<ProductCardProps> = function ({ item }) {
         src={item.src}
         alt={item.productName}
       />
-      <div className="sm:px-6 px-2 py-4 flex flex-col gap-2 text-gray-700">
+      <div className="sm:px-6 py-4 flex flex-col gap-2 text-gray-700">
         <div className="font-bold md:text-xl text-sm capitalize">
           {item.productName}
         </div>
@@ -34,7 +34,7 @@ const ProductCard: FC<ProductCardProps> = function ({ item }) {
           nihil.
         </p> */}
         <span>
-          <div className="flex items-center justify-between p-2">
+          <div className="flex justify-between items-start">
             <p className="md:text-xl text-sm font-bold">
               {item.discount ? (
                 <>
@@ -54,7 +54,7 @@ const ProductCard: FC<ProductCardProps> = function ({ item }) {
                 </span>
               )}
             </p>
-            <div className="flex items-center rounded-lg px-3 py-1">
+            <div className="flex items-center rounded-lg py-1">
               {quantity > 0 && (
                 <IconButton onClick={() => handleQuantityChange(-1)}>
                   <RemoveIcon fontSize="medium" />

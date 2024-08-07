@@ -3,7 +3,6 @@ import { Button } from "./../components/Button.tsx";
 import Header from "../components/Header.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { FC, PropsWithChildren } from "react";
-import SmallCart from "../components/SmallCart.tsx";
 import Feature from "../components/Feature.tsx";
 import CtaSection from "../components/CtaSection.tsx"
 import Footer from "../components/Footer.tsx";

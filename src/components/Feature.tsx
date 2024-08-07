@@ -53,11 +53,11 @@ const Example: FC = () => {
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-          <dl className="grid max-w-xl grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-2 lg:max-w-none lg:gap-y-16">
+          <dl className="grid max-w-xl grid-cols-2 gap-x-1 sm:gap-x-8 gap-y-10 sm:grid-cols-2 lg:max-w-none lg:gap-y-16">
             {features.map((feature) => (
-              <a href={feature.to} key={feature.name} className="relative pl-10">
+              <a href={feature.to} key={feature.name} className="relative sm:pl-10">
                 <dt className="text-xs sm:text-base font-semibold leading-6 sm:leading-7 text-gray-900">
-                  <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-green-600">
+                  <div className="absolute left-0 top-[-40px] sm:top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-green-600">
                     <feature.icon aria-hidden="true" className="h-4 w-4 sm:h-6 sm:w-6 text-black" />
                   </div>
                   {feature.name}

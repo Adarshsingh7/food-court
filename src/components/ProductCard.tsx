@@ -14,13 +14,13 @@ const ProductCard: FC = function () {
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg">
       <img
-        className="w-full h-48 object-cover md:h-56 lg:h-64"
+        className="h-40 object-cover md:h-56 w-full lg:h-64"
         // src="https://images.herzindagi.info/image/2021/Sep/chaii-samosa.jpg"
         src='/idli.jpg'
         alt="Hot Fresh Samosa"
       />
-      <div className="px-6 py-4 flex flex-col gap-2 text-gray-700">
-        <div className="font-bold md:text-xl text-md">Hot Fresh Samosa</div>
+      <div className="sm:px-6 px-2 py-4 flex flex-col gap-2 text-gray-700">
+        <div className="font-bold md:text-xl text-sm">Hot Fresh Samosa</div>
         {/* <p className="text-gray-700 text-base line-clamp-2">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus
           quia, nulla! Maiores et perferendis eaque, exercitationem praesentium
@@ -28,9 +28,9 @@ const ProductCard: FC = function () {
         </p> */}
         <span>
           <div className="flex items-center justify-between p-2">
-            <p className="md:text-xl text-md font-bold">
+            <p className="md:text-xl text-sm font-bold">
               <span>₹40</span>
-              <span className="line-through text-sm text-gray-500 mx-1">₹50</span>
+              <span className="line-through sm:text-sm text:xs text-gray-500 mx-1">₹50</span>
             </p>
             <div className="flex items-center rounded-lg px-3 py-1">
               {quantity > 0 && <IconButton onClick={() => handleQuantityChange(-1)}>

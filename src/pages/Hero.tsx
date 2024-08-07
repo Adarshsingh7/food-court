@@ -4,8 +4,48 @@ import Header from "../components/Header.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { FC, PropsWithChildren } from "react";
 import Feature from "../components/Feature.tsx";
-import CtaSection from "../components/CtaSection.tsx"
+import CtaSection from "../components/CtaSection.tsx";
 import Footer from "../components/Footer.tsx";
+import { itemType } from "../types/cartType.ts";
+
+const foodItem: itemType[] = [
+  {
+    id: 1,
+    productName: "south indian idly",
+    price: 20,
+    src: "/idli.jpg",
+    description: "south indian idly",
+    discount: 10,
+    unit: "plate",
+  },
+  {
+    id: 2,
+    productName: "south indian dosa",
+    price: 100,
+    src: "/dosa.webp",
+    description: "south indian dosa",
+    discount: 10,
+    unit: "piece",
+  },
+  {
+    id: 3,
+    productName: "fast food combo",
+    price: 150,
+    src: "/fast-food.jpg",
+    description: "get all fast food items in one combo ",
+    discount: 10,
+    unit: "pack",
+  },
+  {
+    id: 4,
+    productName: "veg role",
+    price: 40,
+    src: "/role.webp",
+    description: "the best veg role in the market",
+    discount: 15,
+    unit: "piece",
+  },
+];
 
 const Hero: FC = () => {
   return (
@@ -13,7 +53,7 @@ const Hero: FC = () => {
       <Header />
       {/* <SmallCart /> */}
       <div className="md:px-20 px-2 py-10 color-black">
-        <SectionWrapper >
+        <SectionWrapper>
           <img
             src="/overview.jpg"
             className="w-full h-64 md:h-96 object-cover opacity-80"
@@ -35,10 +75,9 @@ const Hero: FC = () => {
         <SectionWrapper>
           <MainHeading>Featured Products</MainHeading>
           <div className="grid lg:grid-cols-4 grid-cols-2 grid-col-1 gap-2 ">
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            {foodItem.map((item) => (
+              <ProductCard key={item.id} item={item} />
+            ))}
           </div>
         </SectionWrapper>
 

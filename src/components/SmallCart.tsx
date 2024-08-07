@@ -36,7 +36,9 @@ const EnhancedSnackbar: React.FC = () => {
           icon={false}
         >
           <div className="flex items-center justify-between w-full">
-            <span className="mr-4">This is a success Alert inside a Snackbar!</span>
+            <span className="mr-4">
+              This is a success Alert inside a Snackbar!
+            </span>
             <div className="flex gap-2">
               <Button
                 color="inherit"

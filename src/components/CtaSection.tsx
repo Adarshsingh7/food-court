@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import { Button } from './Button';
+import { FC } from "react";
+import { Button } from "./Button";
 
 const CtaSection: FC = () => {
   return (
@@ -9,7 +9,13 @@ const CtaSection: FC = () => {
         aria-hidden="true"
         className="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-y-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-full sm:-ml-80 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0"
       >
-        <circle r={512} cx={512} cy={512} fill="url(#food-court-gradient)" fillOpacity="0.7" />
+        <circle
+          r={512}
+          cx={512}
+          cy={512}
+          fill="url(#food-court-gradient)"
+          fillOpacity="0.7"
+        />
         <defs>
           <radialGradient id="food-court-gradient">
             <stop stopColor="#fff" />
@@ -24,11 +30,17 @@ const CtaSection: FC = () => {
           Start ordering from us today.
         </h2>
         <p className="mt-6 text-lg leading-8 text-gray-600">
-          Experience the best vegetarian cuisine made from fresh, locally sourced ingredients. Your satisfaction is our priority.
+          Experience the best vegetarian cuisine made from fresh, locally
+          sourced ingredients. Your satisfaction is our priority.
         </p>
         <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
-          <Button additionalClasses='bg-purple-800 text-white'>Order Now</Button>
-          <a href="#" className="text-sm font-semibold leading-6 text-green-600">
+          <Button additionalClasses="bg-purple-800 text-white">
+            Order Now
+          </Button>
+          <a
+            href="#"
+            className="text-sm font-semibold leading-6 text-green-600"
+          >
             Learn more <span aria-hidden="true">→</span>
           </a>
         </div>

@@ -4,6 +4,9 @@ import Header from "../components/Header.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { FC, PropsWithChildren } from "react";
 import SmallCart from "../components/SmallCart.tsx";
+import Feature from "../components/Feature.tsx";
+import CtaSection from "../components/CtaSection.tsx"
+import Footer from "../components/Footer.tsx";
 
 const Hero: FC = () => {
   return (
@@ -11,7 +14,7 @@ const Hero: FC = () => {
       <Header />
       <SmallCart />
       <div className="md:px-20 px-2 py-10 color-black">
-        <div className="relative mb-14">
+        <SectionWrapper >
           <img
             src="/overview.jpg"
             className="w-full h-64 md:h-96 object-cover opacity-80"
@@ -28,23 +31,33 @@ const Hero: FC = () => {
               <Button additionalClasses="md:w-[50%]">Shop Now</Button>
             </div>
           </div>
-        </div>
+        </SectionWrapper>
 
         <SectionWrapper>
           <MainHeading>Featured Products</MainHeading>
-          <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-col-1 gap-2">
+          <div className="grid lg:grid-cols-4 grid-cols-2 grid-col-1 gap-2 ">
+            <ProductCard />
             <ProductCard />
             <ProductCard />
             <ProductCard />
           </div>
         </SectionWrapper>
+
+        <SectionWrapper>
+          <Feature />
+        </SectionWrapper>
+
+        <SectionWrapper>
+          <CtaSection />
+        </SectionWrapper>
       </div>
+      <Footer />
     </>
   );
 };
 
 const SectionWrapper: FC<PropsWithChildren> = ({ children }) => {
-  return <div className="section-wrapper">{children}</div>;
+  return <div className="relative mb-14">{children}</div>;
 };
 
 const MainHeading: FC<PropsWithChildren> = ({ children }) => {

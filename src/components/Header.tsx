@@ -38,7 +38,7 @@ import {
   ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-
+import Cart from "./Cart.tsx";
 const navigation = {
   categories: [
     {
@@ -172,9 +172,11 @@ const navigation = {
 
 export default function NavBar() {
   const [open, setOpen] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   return (
     <div className="bg-white">
+      <Cart open={cartOpen} setOpen={setCartOpen} />
       {/* Mobile menu */}
       <Dialog open={open} onClose={setOpen} className="relative z-40 lg:hidden">
         <DialogBackdrop
@@ -505,6 +507,7 @@ export default function NavBar() {
                 <div className="ml-4 flow-root lg:ml-6">
                   <a href="#" className="group -m-2 flex items-center p-2">
                     <ShoppingBagIcon
+                      onClick={() => setCartOpen(!cartOpen)}
                       aria-hidden="true"
                       className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                     />

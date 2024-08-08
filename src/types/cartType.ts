@@ -17,12 +17,17 @@ export interface itemType {
     | "sachet";
   description: string;
   price: number;
-  totalPrice?: number;
-  quantity?: number;
+  productType: "food" | "vegetable" | "fruit";
+  tags: string[];
   discount?: number;
 }
 
-export interface cartState {
-  items: itemType[];
+export interface CartItemType {
+  item: itemType;
+  quantity: number;
+}
+
+export interface CartType {
+  items: CartItemType[];
   amount: number;
 }

@@ -6,7 +6,10 @@ import { FC, PropsWithChildren } from "react";
 import Feature from "../components/Feature.tsx";
 import CtaSection from "../components/CtaSection.tsx";
 import Footer from "../components/Footer.tsx";
-import { itemType } from "../types/cartType.ts";
+import { CartItemType, CartType, itemType } from "../types/cartType.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store.ts";
+import { addItemToCart } from "../slice/cartSlice.ts";
 
 const foodItem: itemType[] = [
   {
@@ -17,6 +20,8 @@ const foodItem: itemType[] = [
     description: "south indian idly",
     discount: 10,
     unit: "plate",
+    productType: "food",
+    tags: ["south indian", "breakfast"],
   },
   {
     id: 2,
@@ -26,6 +31,8 @@ const foodItem: itemType[] = [
     description: "south indian dosa",
     discount: 10,
     unit: "piece",
+    productType: "food",
+    tags: ["south indian", "breakfast"],
   },
   {
     id: 3,
@@ -35,6 +42,8 @@ const foodItem: itemType[] = [
     description: "get all fast food items in one combo ",
     discount: 10,
     unit: "pack",
+    productType: "food",
+    tags: ["fast food", "combo"],
   },
   {
     id: 4,
@@ -44,10 +53,25 @@ const foodItem: itemType[] = [
     description: "the best veg role in the market",
     discount: 15,
     unit: "piece",
+    productType: "food",
+    tags: ["veg", "role", "snacks"],
   },
 ];
 
 const Hero: FC = () => {
+  const cart = useSelector((state: RootState): CartType => state.cart);
+  const dispatch = useDispatch();
+
+  console.log(cart);
+
+  const addToCart = (item: itemType) => {
+    const newToBeAddedItem: CartItemType = {
+      item: item,
+      quantity: 1,
+    };
+    dispatch(addItemToCart(newToBeAddedItem));
+  };
+
   return (
     <>
       <Header />
@@ -76,7 +100,11 @@ const Hero: FC = () => {
           <MainHeading>Featured Products</MainHeading>
           <div className="grid lg:grid-cols-4 grid-cols-2 grid-col-1 gap-2 ">
             {foodItem.map((item) => (
-              <ProductCard key={item.id} item={item} />
+              <ProductCard
+                key={item.id}
+                item={item}
+                addItemToCart={addToCart}
+              />
             ))}
           </div>
         </SectionWrapper>

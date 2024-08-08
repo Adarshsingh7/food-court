@@ -8,13 +8,15 @@ import { itemType } from "../types/cartType";
 
 interface ProductCardProps {
   item: itemType;
+  addItemToCart: (item: itemType) => void;
 }
 
-const ProductCard: FC<ProductCardProps> = function ({ item }) {
+const ProductCard: FC<ProductCardProps> = function ({ item, addItemToCart }) {
   const [quantity, setQuantity] = useState(0);
 
   const handleQuantityChange = (amount: number) => {
     setQuantity((prevQuantity) => Math.max(0, prevQuantity + amount));
+    addItemToCart(item);
   };
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg">

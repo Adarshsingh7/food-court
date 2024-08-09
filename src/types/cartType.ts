@@ -24,6 +24,7 @@ export interface itemType {
 
 export interface CartItemType {
   item: itemType;
+  itemId: number;
   quantity: number;
 }
 

@@ -5,19 +5,27 @@ import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/RemoveCircle";
 import { IconButton } from "./Button";
 import { itemType } from "../types/cartType";
+import { useDispatch } from "react-redux";
+import { addItemToCart, removeItemFromCart } from "../slice/cartSlice.ts";
+import { AppDispatch } from "../store.ts";
 
 interface ProductCardProps {
   item: itemType;
-  addItemToCart: (item: itemType) => void;
 }
 
-const ProductCard: FC<ProductCardProps> = function ({ item, addItemToCart }) {
+const ProductCard: FC<ProductCardProps> = function ({ item }) {
   const [quantity, setQuantity] = useState(0);
+  const dispatch: AppDispatch = useDispatch();
 
   const handleQuantityChange = (amount: number) => {
     setQuantity((prevQuantity) => Math.max(0, prevQuantity + amount));
-    addItemToCart(item);
+    if (amount === 1) {
+      dispatch(addItemToCart(item.id));
+    } else if (amount === -1) {
+      dispatch(removeItemFromCart(item.id));
+    }
   };
+
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg">
       <img

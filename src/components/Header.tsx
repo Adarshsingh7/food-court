@@ -148,7 +148,7 @@ const navigation = {
   pages: [
     { name: "About Us", href: "#" },
     { name: "Contact", href: "#" },
-    { name: "Locations", href: "#" },
+    { name: "Menu", href: "/menu" },
     { name: "Events", href: "#" },
   ],
 };
@@ -333,7 +333,7 @@ export default function NavBar() {
 
               {/* Logo */}
               <div className="ml-4 flex lg:ml-0">
-                <a href="#">
+                <a href="/">
                   <span className="sr-only">Your Company</span>
                   <img
                     alt=""

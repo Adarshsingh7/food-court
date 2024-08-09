@@ -13,7 +13,6 @@ const Hero: FC = () => {
   const products = useSelector((state: RootState) => state.product);
   return (
     <>
-      <Header />
       {/* <SmallCart /> */}
       <div className="md:px-20 px-2 py-10 color-black">
         <SectionWrapper>

@@ -1,11 +1,11 @@
 /** @format */
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import QuantityButton from "./QuantityButtons";
 import { itemType } from "../types/cartType";
 import { addItemToCart, removeItemFromCart } from "../slice/cartSlice";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
 
 interface ProductListProps {
   item: itemType;
@@ -14,6 +14,7 @@ interface ProductListProps {
 const ProductList: FC<ProductListProps> = ({ item }) => {
   const [quantity, setQuantity] = useState(0);
   const dispatch: AppDispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const handleQuantityChange = (amount: number) => {
     setQuantity((prevQuantity) => Math.max(0, prevQuantity + amount));
@@ -23,8 +24,16 @@ const ProductList: FC<ProductListProps> = ({ item }) => {
       dispatch(removeItemFromCart(item.id));
     }
   };
+
+  useEffect(() => {
+    const cartItem = cartItems.find((cartItem) => cartItem.itemId === item.id);
+    if (cartItem) {
+      setQuantity(cartItem.quantity);
+    }
+  }, [cartItems, item.id]);
+
   return (
-    <div className={`flex flex-col p-4 rounded-lg shadow-md bg-white `}>
+    <div className={`flex flex-col p-4 rounded-lg shadow-md bg-white`}>
       <div className="flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center mb-4 md:mb-0 text-gray-700">
           <img

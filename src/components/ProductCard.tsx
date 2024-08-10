@@ -1,10 +1,10 @@
 /** @format */
 
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { itemType } from "../types/cartType";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart, removeItemFromCart } from "../slice/cartSlice.ts";
-import { AppDispatch } from "../store.ts";
+import { AppDispatch, RootState } from "../store.ts";
 import QuantityButton from "./QuantityButtons.tsx";
 
 interface ProductCardProps {
@@ -14,6 +14,7 @@ interface ProductCardProps {
 const ProductCard: FC<ProductCardProps> = function ({ item }) {
   const [quantity, setQuantity] = useState(0);
   const dispatch: AppDispatch = useDispatch();
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const handleQuantityChange = (amount: number) => {
     setQuantity((prevQuantity) => Math.max(0, prevQuantity + amount));
@@ -23,6 +24,13 @@ const ProductCard: FC<ProductCardProps> = function ({ item }) {
       dispatch(removeItemFromCart(item.id));
     }
   };
+
+  useEffect(() => {
+    const cartItem = cartItems.find((cartItem) => cartItem.itemId === item.id);
+    if (cartItem) {
+      setQuantity(cartItem.quantity);
+    }
+  }, [cartItems, item.id]);
 
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg">

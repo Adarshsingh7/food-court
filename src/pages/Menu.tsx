@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FC } from "react";
 import {
   Dialog,
   DialogBackdrop,
@@ -22,8 +22,35 @@ import {
 import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
 
-// Data
-const sortOptions = [
+// Type for individual sort option
+type SortOption = {
+  name: string;
+  href: string;
+  current: boolean;
+};
+
+// Type for individual sub-category
+type SubCategory = {
+  name: string;
+  href: string;
+};
+
+// Type for filter option
+type FilterOption = {
+  value: string;
+  label: string;
+  checked: boolean;
+};
+
+// Type for filter
+type Filter = {
+  id: string;
+  name: string;
+  options: FilterOption[];
+};
+
+// Data definitions
+const sortOptions: SortOption[] = [
   { name: "Most Popular", href: "#", current: true },
   { name: "Best Rating", href: "#", current: false },
   { name: "Newest", href: "#", current: false },
@@ -31,7 +58,7 @@ const sortOptions = [
   { name: "Price: High to Low", href: "#", current: false },
 ];
 
-const subCategories = [
+const subCategories: SubCategory[] = [
   { name: "Pizza", href: "#" },
   { name: "Burgers", href: "#" },
   { name: "Sushi", href: "#" },
@@ -39,7 +66,7 @@ const subCategories = [
   { name: "Drinks", href: "#" },
 ];
 
-const filters = [
+const filters: Filter[] = [
   {
     id: "cuisine",
     name: "Cuisine",
@@ -75,12 +102,24 @@ const filters = [
   },
 ];
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+interface MobileFilterDialogProps {
+  mobileFiltersOpen: boolean;
+  setMobileFiltersOpen: (state: boolean) => void;
+}
+
+interface CategoryListProps {
+  categories: SubCategory[];
+}
+
+interface FilterSectionProps {
+  section: Filter;
 }
 
 // MobileFilterDialog Component
-function MobileFilterDialog({ mobileFiltersOpen, setMobileFiltersOpen }) {
+const MobileFilterDialog: FC<MobileFilterDialogProps> = function ({
+  mobileFiltersOpen,
+  setMobileFiltersOpen,
+}) {
   return (
     <Dialog
       open={mobileFiltersOpen}
@@ -117,10 +156,10 @@ function MobileFilterDialog({ mobileFiltersOpen, setMobileFiltersOpen }) {
       </div>
     </Dialog>
   );
-}
+};
 
 // CategoryList Component
-function CategoryList({ categories }) {
+const CategoryList: FC<CategoryListProps> = function ({ categories }) {
   return (
     <>
       <h3 className="sr-only">Categories</h3>
@@ -135,10 +174,10 @@ function CategoryList({ categories }) {
       </ul>
     </>
   );
-}
+};
 
 // FilterSection Component
-function FilterSection({ section }) {
+const FilterSection: FC<FilterSectionProps> = function ({ section }) {
   return (
     <Disclosure as="div" className="border-t border-gray-200 px-4 py-6">
       <h3 className="-mx-2 -my-3 flow-root">
@@ -180,7 +219,7 @@ function FilterSection({ section }) {
       </DisclosurePanel>
     </Disclosure>
   );
-}
+};
 
 // SortMenu Component
 function SortMenu() {
@@ -204,12 +243,11 @@ function SortMenu() {
             <MenuItem key={option.name}>
               <a
                 href={option.href}
-                className={classNames(
-                  option.current
-                    ? "font-medium text-gray-900"
-                    : "text-gray-500",
+                className={`${
+                  option.current ? "font-medium text-gray-900" : "text-gray-500"
+                },
                   "block px-4 py-2 text-sm data-[focus]:bg-gray-100",
-                )}
+                  `}
               >
                 {option.name}
               </a>

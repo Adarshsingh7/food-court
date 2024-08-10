@@ -18,6 +18,8 @@ import {
 } from "@heroicons/react/20/solid";
 import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -266,14 +268,12 @@ function SortMenu() {
 
 // ProductGrid Component
 function ProductGrid() {
+  const products = useSelector((state: RootState) => state.product);
   return (
-    <div className="lg:col-span-3">
-      <ProductList />
-      <ProductList />
-      <ProductList />
-      <ProductList />
-      <ProductList />
-      <ProductList />
+    <div className="flex flex-col gap-3">
+      {products.map((product) => (
+        <ProductList item={product} key={product.id} />
+      ))}
     </div>
   );
 }
@@ -316,12 +316,12 @@ export default function Example() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   return (
-    <div className="bg-white">
+    <div className="sm:px-32 sm:py-10" id="menu">
       <MobileFilterDialog
         mobileFiltersOpen={mobileFiltersOpen}
         setMobileFiltersOpen={setMobileFiltersOpen}
       />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-screen">
+      <main className="mx-auto max-w-7xl px-4 sm:py-6 sm:px-6 lg:px-8 bg-white rounded-3xl">
         {/* search input */}
         <div className="flex flex-col gap-5 my-5">
           <Search />
@@ -350,7 +350,7 @@ export default function Example() {
             </div>
           </div>
         </div>
-        <section aria-labelledby="products-heading" className="pb-24 pt-6">
+        <section aria-labelledby="products-heading">
           <h2 id="products-heading" className="sr-only">
             Products
           </h2>

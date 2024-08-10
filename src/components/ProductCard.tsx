@@ -1,13 +1,11 @@
 /** @format */
 
 import { FC, useState } from "react";
-import AddIcon from "@mui/icons-material/AddCircle";
-import RemoveIcon from "@mui/icons-material/RemoveCircle";
-import { IconButton } from "./Button";
 import { itemType } from "../types/cartType";
 import { useDispatch } from "react-redux";
 import { addItemToCart, removeItemFromCart } from "../slice/cartSlice.ts";
 import { AppDispatch } from "../store.ts";
+import QuantityButton from "./QuantityButtons.tsx";
 
 interface ProductCardProps {
   item: itemType;
@@ -64,22 +62,10 @@ const ProductCard: FC<ProductCardProps> = function ({ item }) {
                 </span>
               )}
             </p>
-            <div className="flex items-center rounded-lg py-1">
-              {quantity > 0 && (
-                <IconButton onClick={() => handleQuantityChange(-1)}>
-                  <RemoveIcon fontSize="medium" />
-                </IconButton>
-              )}
-              <input
-                type="number"
-                value={quantity}
-                readOnly
-                className="w-8 text-center bg-transparent outline-none"
-              />
-              <IconButton onClick={() => handleQuantityChange(1)}>
-                <AddIcon fontSize="medium" />
-              </IconButton>
-            </div>
+            <QuantityButton
+              quantity={quantity}
+              handleQuantityChange={handleQuantityChange}
+            />
             {/* <Button>Add</Button> */}
           </div>
         </span>

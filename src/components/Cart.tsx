@@ -7,16 +7,12 @@ import {
   DialogTitle,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store.ts";
 import { CartItemType } from "../types/cartType.ts";
 import QuantityButton from "./QuantityButtons.tsx";
-import {
-  addItemToCart,
-  removeItem,
-  removeItemFromCart,
-} from "../slice/cartSlice.ts";
+import { removeItem } from "../slice/cartSlice.ts";
 
 interface Props {
   open: boolean;
@@ -101,18 +97,15 @@ const CartItem: FC<CartItemProps> = function ({ cartItem }) {
   const item = cartItem.item;
   const dispatch: AppDispatch = useDispatch();
 
-  const handleQuantityChange = (amount: number) => {
-    if (cartItem.quantity === 1 && amount === -1) return;
-    if (amount === 1) {
-      dispatch(addItemToCart(item.id));
-    } else if (amount === -1) {
-      dispatch(removeItemFromCart(item.id));
-    }
-  };
-
   const handleRemoveItemFromCart = function () {
     dispatch(removeItem(item.id));
   };
+
+  useEffect(() => {
+    if (cartItem.quantity <= 0) {
+      dispatch(removeItem(item.id));
+    }
+  }, [cartItem.quantity, dispatch, item.id]);
 
   return (
     <li key={item.id} className="flex py-6">
@@ -148,7 +141,7 @@ const CartItem: FC<CartItemProps> = function ({ cartItem }) {
             </h3>
             <QuantityButton
               quantity={cartItem.quantity}
-              handleQuantityChange={handleQuantityChange}
+              itemId={cartItem.itemId}
             />
           </div>
         </div>

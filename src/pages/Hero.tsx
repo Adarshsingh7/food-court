@@ -9,6 +9,7 @@ import { RootState } from "../store.ts";
 
 const Hero: FC = () => {
   const products = useSelector((state: RootState) => state.product);
+
   return (
     <>
       {/* <SmallCart /> */}

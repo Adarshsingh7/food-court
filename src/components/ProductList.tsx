@@ -1,37 +1,18 @@
 /** @format */
 
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import QuantityButton from "./QuantityButtons";
 import { itemType } from "../types/cartType";
-import { addItemToCart, removeItemFromCart } from "../slice/cartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 interface ProductListProps {
   item: itemType;
 }
 
 const ProductList: FC<ProductListProps> = ({ item }) => {
-  const [quantity, setQuantity] = useState(0);
-  const dispatch: AppDispatch = useDispatch();
   const cartItems = useSelector((state: RootState) => state.cart.items);
-
-  const handleQuantityChange = (amount: number) => {
-    setQuantity((prevQuantity) => Math.max(0, prevQuantity + amount));
-    if (amount === 1) {
-      dispatch(addItemToCart(item.id));
-    } else if (amount === -1) {
-      dispatch(removeItemFromCart(item.id));
-    }
-  };
-
-  useEffect(() => {
-    const cartItem = cartItems.find((cartItem) => cartItem.itemId === item.id);
-    if (!cartItem) setQuantity(0);
-    if (cartItem) {
-      setQuantity(cartItem.quantity);
-    }
-  }, [cartItems, item.id]);
+  const cartItem = cartItems.find((cartItem) => cartItem.itemId === item.id);
 
   return (
     <div className={`flex flex-col p-4 rounded-lg shadow-md bg-white`}>
@@ -73,10 +54,11 @@ const ProductList: FC<ProductListProps> = ({ item }) => {
           </div>
         </div>
         <div className="flex items-center">
-          <QuantityButton
-            quantity={quantity}
-            handleQuantityChange={handleQuantityChange}
-          />
+          {cartItem ? (
+            <QuantityButton quantity={cartItem.quantity} itemId={item.id} />
+          ) : (
+            <QuantityButton quantity={0} itemId={item.id} />
+          )}
         </div>
       </div>
     </div>

@@ -27,6 +27,7 @@ const ProductCard: FC<ProductCardProps> = function ({ item }) {
 
   useEffect(() => {
     const cartItem = cartItems.find((cartItem) => cartItem.itemId === item.id);
+    if (!cartItem) setQuantity(0);
     if (cartItem) {
       setQuantity(cartItem.quantity);
     }

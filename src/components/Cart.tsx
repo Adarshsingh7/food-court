@@ -8,9 +8,15 @@ import {
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { FC } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store.ts";
 import { CartItemType } from "../types/cartType.ts";
+import QuantityButton from "./QuantityButtons.tsx";
+import {
+  addItemToCart,
+  removeItem,
+  removeItemFromCart,
+} from "../slice/cartSlice.ts";
 
 interface Props {
   open: boolean;
@@ -68,6 +74,11 @@ const Cart: FC<Props> = function ({ open, setOpen }) {
                         role="list"
                         className="-my-6 divide-y divide-gray-200"
                       >
+                        {cart.length === 0 && (
+                          <p className="text-gray-500">
+                            Add some product first...
+                          </p>
+                        )}
                         {cart.map((cartItem, idx) => (
                           <CartItem key={idx} cartItem={cartItem} idx={idx} />
                         ))}
@@ -88,9 +99,24 @@ const Cart: FC<Props> = function ({ open, setOpen }) {
 
 const CartItem: FC<CartItemProps> = function ({ cartItem }) {
   const item = cartItem.item;
+  const dispatch: AppDispatch = useDispatch();
+
+  const handleQuantityChange = (amount: number) => {
+    if (cartItem.quantity === 1 && amount === -1) return;
+    if (amount === 1) {
+      dispatch(addItemToCart(item.id));
+    } else if (amount === -1) {
+      dispatch(removeItemFromCart(item.id));
+    }
+  };
+
+  const handleRemoveItemFromCart = function () {
+    dispatch(removeItem(item.id));
+  };
 
   return (
     <li key={item.id} className="flex py-6">
+      {/*cart item me product ki image wala div*/}
       <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">
         <img
           alt={item.productName}
@@ -99,15 +125,34 @@ const CartItem: FC<CartItemProps> = function ({ cartItem }) {
         />
       </div>
 
+      {/*other portion of the cart containg the main content and the pricing of the div*/}
       <div className="ml-4 flex flex-1 flex-col">
         <div>
-          <div className="flex justify-between text-base font-medium text-gray-900">
+          <div className="flex justify-between text-base font-medium text-gray-800">
             <h3>
-              <a href={item.src}>{item.productName}</a>
+              <p>
+                <span className="line-clamp-1 capitalize">
+                  {item.productName}
+                </span>{" "}
+                X {cartItem.quantity}
+              </p>
             </h3>
-            <p className="ml-4">{item.price}</p>
+            <p className="ml-4">₹{item.price * cartItem.quantity}</p>
           </div>
         </div>
+
+        <div>
+          <div className="flex justify-between text-base font-medium text-gray-500">
+            <h3>
+              <p>CHANGE</p>
+            </h3>
+            <QuantityButton
+              quantity={cartItem.quantity}
+              handleQuantityChange={handleQuantityChange}
+            />
+          </div>
+        </div>
+
         <div className="flex flex-1 items-end justify-between text-sm">
           <p className="text-gray-500">Qty {cartItem.quantity}</p>
 
@@ -115,6 +160,7 @@ const CartItem: FC<CartItemProps> = function ({ cartItem }) {
             <button
               type="button"
               className="font-medium text-indigo-600 hover:text-indigo-500"
+              onClick={handleRemoveItemFromCart}
             >
               Remove
             </button>
@@ -126,11 +172,12 @@ const CartItem: FC<CartItemProps> = function ({ cartItem }) {
 };
 
 const CartTotal: FC<CartTotalProps> = function ({ setOpen }) {
+  const totalAmount = useSelector((state: RootState) => state.cart.amount);
   return (
     <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
       <div className="flex justify-between text-base font-medium text-gray-900">
         <p>Subtotal</p>
-        <p>$262.00</p>
+        <p>₹{totalAmount}</p>
       </div>
       <p className="mt-0.5 text-sm text-gray-500">
         Shipping and taxes calculated at checkout.

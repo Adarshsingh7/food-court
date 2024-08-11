@@ -4,7 +4,6 @@ import ProductCard from "../components/ProductCard.tsx";
 import { FC, PropsWithChildren } from "react";
 import Feature from "../components/Feature.tsx";
 import CtaSection from "../components/CtaSection.tsx";
-import Footer from "../components/Footer.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../store.ts";
 
@@ -50,7 +49,6 @@ const Hero: FC = () => {
           <CtaSection />
         </SectionWrapper>
       </div>
-      <Footer />
     </>
   );
 };

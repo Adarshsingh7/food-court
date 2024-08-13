@@ -1,10 +1,11 @@
 /** @format */
-import { Button } from "./../components/Button.tsx";
-import ProductCard from "../components/ProductCard.tsx";
 import { FC, PropsWithChildren } from "react";
-import Feature from "../components/Feature.tsx";
-import CtaSection from "../components/CtaSection.tsx";
 import { useSelector } from "react-redux";
+
+import ProductCard from "../components/ProductCard.tsx";
+import CtaSection from "../components/CtaSection.tsx";
+import Feature from "../components/Feature.tsx";
+import { Button } from "./../components/Button.tsx";
 import { RootState } from "../store.ts";
 
 const Hero: FC = () => {

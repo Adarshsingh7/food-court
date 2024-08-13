@@ -6,9 +6,10 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AppDispatch, RootState } from "../store.ts";
 import { CartItemType } from "../types/cartType.ts";
 import QuantityButton from "./QuantityButtons.tsx";

@@ -326,10 +326,6 @@ export default function Example() {
         <div className="flex flex-col gap-5 my-5">
           <Search />
           <div className="flex items-baseline justify-between border-b border-gray-200">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              New Arrivals
-            </h1>
-
             <div className="flex items-center">
               <SortMenu />
               <button

@@ -19,7 +19,8 @@
 
 ### Additional Feature:
 - 📧 **Mailing System**: Send order confirmations and status updates directly to users via email.
-
+- 📱 **Responsive Design**: Access the app from any device, including mobile phones and tablets.
+- ⏪ **Real Time Notifications**: Get instant notiofication to the any booking to the admin in real time
 ---
 
 ## 📂 Project Setup
@@ -27,3 +28,23 @@
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/redux-plaza.git
+
+2. Navigate to the project directory:
+   ```bash
+   cd redux-plaza
+
+3. Install the dependencies:
+   ```bash
+   npm install
+
+4. Start the development server:
+   ```bash
+   npm run dev
+
+## 🚀 Technologies Used
+- **Frontend**: React, Redux, Tailwind CSS
+- **Backend**: Node.js, Express, MongoDB, appwrite
+- **Deployment**:  Vercel
+- **Email Service**: SendGrid
+- **Real Time Notification**: Pusher
+- **Styling**: Heroicons, React Icons, Tailwind, MUI

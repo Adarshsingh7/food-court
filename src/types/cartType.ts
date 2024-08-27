@@ -19,6 +19,7 @@ export interface itemType {
   price: number;
   productType: "food" | "vegetable" | "fruit";
   tags: string[];
+  quantity:number;
   discount?: number;
 }
 

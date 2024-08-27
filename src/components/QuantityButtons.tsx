@@ -2,9 +2,10 @@ import { IconButton } from "./Button";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/RemoveCircle";
 import { FC } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../store";
 import { addItemToCart, removeItemFromCart } from "../slice/cartSlice.ts";
+import { getCurrentQuantity } from "../slice/productSlice.ts";
 
 interface QuantityButtonProps {
   quantity: number;
@@ -15,6 +16,7 @@ const QuantityButton: FC<QuantityButtonProps> = function ({
   quantity,
   itemId,
 }) {
+  const currentProductCount = useSelector(getCurrentQuantity(itemId));
   const dispatch: AppDispatch = useDispatch();
 
   function handleQuantityChange(amount: number) {
@@ -39,7 +41,7 @@ const QuantityButton: FC<QuantityButtonProps> = function ({
         readOnly
         className="w-8 text-center bg-transparent outline-none"
       />
-      <IconButton onClick={() => handleQuantityChange(1)}>
+      <IconButton onClick={() => handleQuantityChange(1)}  disabled={currentProductCount === 0}>
         <AddIcon fontSize="medium" />
       </IconButton>
     </div>

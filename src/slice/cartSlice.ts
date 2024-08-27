@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, ThunkAction } from "@reduxjs/toolkit";
-import { CartType, CartItemType, itemType } from "../types/cartType";
+import { CartType, CartItemType  } from "../types/cartType";
+import { quantityInc, quantityDec } from "./productSlice.ts";
 import { RootState } from "../store.ts";
 
 const initialState: CartType = {
@@ -55,17 +56,13 @@ export const addItemToCart = (
   return (dispatch, getState) => {
     const { cart, product } = getState();
     const existingItem = cart.items.find((item) => item.itemId === itemId);
-
+    const productItem = product.find((item) => item.id === itemId);
     if (existingItem) {
       dispatch(cartSlice.actions.incrementQuantity(itemId));
-      return;
+    } else if (productItem) {
+      dispatch(cartSlice.actions.addItem({ item: productItem, itemId, quantity: 1 }));
     }
-    const item = product.find(
-      (productItem: itemType) => productItem.id === itemId,
-    );
-    if (item) {
-      dispatch(cartSlice.actions.addItem({ item, itemId, quantity: 1 }));
-    }
+    dispatch(quantityInc(itemId))
   };
 };
 
@@ -75,15 +72,12 @@ export const removeItemFromCart = (
   return function (dispatch, getState) {
     const { cart } = getState();
     const existingItem = cart.items.find((item) => item.itemId === itemId);
-    if (existingItem) {
+    if (existingItem && existingItem.quantity > 1) {
       dispatch(cartSlice.actions.decrementQuantity(itemId));
-      return;
-    }
-
-    const isItemInCart = cart.items.find((item) => item.itemId === itemId);
-    if (isItemInCart) {
+    } else {
       dispatch(cartSlice.actions.removeItem(itemId));
     }
+    dispatch(quantityDec(itemId))
   };
 };
 

@@ -89,8 +89,8 @@ const ProductList2: FC<ProductListProps> = function ({ item }) {
         </div>
         <div className="mt-2 flex items-center">
           <div className="flex justify-between w-full">
-            <div>
-              <span className={`rounded-full ${ currentPorductCount > 10 ? 'bg-green' : currentPorductCount > 5 ? 'bg-yellow' : 'bg-rose-500'} px-1 py-0.5 text-[8px] text-yellow-900 md:text-sm lg:text-base`}>
+            <div className="mt-6">
+              <span className={`rounded-full ${currentPorductCount > 10 ? 'bg-green' : currentPorductCount > 5 ? 'bg-yellow' : 'bg-rose-500'} px-1 py-0.5 text-[8px] text-yellow-900 md:text-sm lg:text-base`}>
                 {currentPorductCount > 10 ? 'In Stock' : currentPorductCount > 5 ? 'Low' : `${currentPorductCount} left`}
               </span>
               <span className="ml-2 text-sm font-semibold text-gray-800 sm:text-base md:text-lg lg:text-xl">

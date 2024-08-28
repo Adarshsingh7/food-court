@@ -2,10 +2,11 @@ import { RootState } from "../store";
 import { useSelector } from "react-redux"
 
 import OrderItem from "./OrderItem"
+import OrderFrom from "./OrderFrom";
 
 function CreateOrder() {
   const cart = useSelector((state: RootState) => state.cart);
-
+  // if(!cart.items.length) return <p>please first order something</p>
   return (
     <div className="space-y-8 px-4 py-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -21,7 +22,7 @@ function CreateOrder() {
           To pay on delivery:&nbsp; ₹ {cart.amount}
         </p>
       </div>
-      <button className="bg-blue-600 text-xs uppercase text-stone-200 tracking-wide rounded-full hover:bg-blue-700 transition-colors duration-300 disabled:cursor-not-allowed px-4 py-2 sm:px-5 sm:py-2.5">Confirm your order</button>
+      <OrderFrom/>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import Hero from "./pages/Hero";
 import Menu from "./pages/Menu";
 import { Provider } from "react-redux";
 import store from "./store.ts";
+import Order from "./pages/Order.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
         path: "/cart",
         element: <div>cart</div>,
       },
+      {
+        path: '/order',
+        element: <Order/>
+      }
     ],
   },
 ]);

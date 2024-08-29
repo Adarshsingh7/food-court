@@ -19,7 +19,7 @@ export interface itemType {
   price: number;
   productType: "food" | "vegetable" | "fruit";
   tags: string[];
-  quantity:number;
+  quantity: number;
   discount?: number;
 }
 
@@ -32,4 +32,17 @@ export interface CartItemType {
 export interface CartType {
   items: CartItemType[];
   amount: number;
+}
+
+export interface OrderItem {
+  item: itemType;
+  quantity: number;
+}
+
+export interface Order {
+  id: number;
+  address: string;
+  phone: number;
+  customerName: string;
+  orderItem: OrderItem[];
 }

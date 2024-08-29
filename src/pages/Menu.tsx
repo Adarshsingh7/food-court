@@ -20,6 +20,8 @@ import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { Button } from '../components/Button'
+import { Link } from "react-router-dom";
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -300,7 +302,7 @@ function Search() {
         </div>
 
         <input
-          className="peer h-full w-full outline-none text-sm text-gray-700 pr-2"
+          className="h-full w-full outline-none text-sm text-gray-700 pr-2"
           type="text"
           autoComplete="off"
           id="search"
@@ -314,6 +316,7 @@ function Search() {
 // Main Component
 export default function Example() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const cartItem = useSelector((state: RootState) => state.cart.items);
 
   return (
     <div className="sm:px-32 sm:py-10" id="menu">
@@ -324,7 +327,16 @@ export default function Example() {
       <main className="mx-auto max-w-7xl px-4 sm:py-6 sm:px-6 lg:px-8 bg-white rounded-3xl">
         {/* search input */}
         <div className="flex flex-col gap-5 my-5">
-          <Search />
+          <div className="flex">
+            <Search />
+            <span className="w-32">
+              {cartItem.length !== 0 && <Link to='/order'>
+                <Button>
+                  Order Now
+                </Button>
+              </Link>}
+            </span>
+          </div>
           <div className="flex items-baseline justify-between border-b border-gray-200">
             <div className="flex items-center">
               <SortMenu />

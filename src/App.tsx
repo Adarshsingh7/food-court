@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import store from "./store.ts";
 import Order from "./pages/Order.tsx";
 import { action as orderAction } from './components/OrderFrom.tsx'
+import OrdersDetail from "./pages/OrdersDetail.tsx";
+import AuthRoute from "./components/AuthRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,14 @@ const router = createBrowserRouter([
         path: '/order',
         element: <Order />,
         action: orderAction
+      },
+      {
+        path: '/allorders',
+        element: (
+          <AuthRoute roles={['admin']}>
+            <OrdersDetail />
+          </AuthRoute>
+        ),
       }
     ],
   },

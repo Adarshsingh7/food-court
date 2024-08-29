@@ -6,7 +6,7 @@ import OrderFrom from "./OrderFrom";
 
 function CreateOrder() {
   const cart = useSelector((state: RootState) => state.cart);
-  // if(!cart.items.length) return <p>please first order something</p>
+  if(!cart.items.length) return <p>please first order something</p>
   return (
     <div className="space-y-8 px-4 py-6">
       <div className="flex flex-wrap items-center justify-between gap-2">

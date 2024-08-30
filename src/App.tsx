@@ -11,6 +11,8 @@ import Order from "./pages/Order.tsx";
 import { action as orderAction } from './components/OrderFrom.tsx'
 import OrdersDetail from "./pages/OrdersDetail.tsx";
 import AuthRoute from "./components/AuthRoute.tsx";
+import User from "./pages/User.tsx";
+import ManageUser from "./pages/ManageUser.tsx";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,18 @@ const router = createBrowserRouter([
         path: '/order',
         element: <Order />,
         action: orderAction
+      },
+      {
+        path: '/user',
+        element: <User />,
+      },
+      {
+        path: '/allusers',
+        element: (
+          <AuthRoute roles={['admin']}>
+            <ManageUser />
+          </AuthRoute>
+        ),
       },
       {
         path: '/allorders',

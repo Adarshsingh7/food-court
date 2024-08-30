@@ -51,8 +51,8 @@ export const action = async ({ request }: { request: Request }) => {
     }
     const order = {
         ...parsedData,
+        status: 'Ordered',
         orderedItem: parsedData.orderedItem.map((ele: ElementType) => {
-            console.log(ele)
             return {
                 quantity: ele.quantity,
                 productName: ele.item.productName,

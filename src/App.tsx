@@ -8,11 +8,12 @@ import Menu from "./pages/Menu";
 import { Provider } from "react-redux";
 import store from "./store.ts";
 import Order from "./pages/Order.tsx";
-import { action as orderAction } from './components/OrderFrom.tsx'
+import { action as orderAction } from "./components/OrderFrom.tsx";
 import OrdersDetail from "./pages/OrdersDetail.tsx";
 import AuthRoute from "./components/AuthRoute.tsx";
 import User from "./pages/User.tsx";
 import ManageUser from "./pages/ManageUser.tsx";
+import OrderDetails from "./pages/OrderDetails.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,30 +32,34 @@ const router = createBrowserRouter([
         element: <div>cart</div>,
       },
       {
-        path: '/order',
+        path: "/order",
         element: <Order />,
-        action: orderAction
+        action: orderAction,
       },
       {
-        path: '/user',
+        path: "/user",
         element: <User />,
       },
       {
-        path: '/allusers',
+        path: "/allusers",
         element: (
-          <AuthRoute roles={['admin']}>
+          <AuthRoute roles={["admin"]}>
             <ManageUser />
           </AuthRoute>
         ),
       },
       {
-        path: '/allorders',
+        path: "/allorders",
         element: (
-          <AuthRoute roles={['admin']}>
+          <AuthRoute roles={["admin"]}>
             <OrdersDetail />
           </AuthRoute>
         ),
-      }
+      },
+      {
+        path: "/order/:id",
+        element: <OrderDetails />,
+      },
     ],
   },
 ]);

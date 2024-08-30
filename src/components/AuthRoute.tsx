@@ -11,7 +11,6 @@ export const FAKE_USER = {
     email: 'test@gmail.com',
     phone: 9231263831,
     address: '133/32 abc, xyz',
-    isAuthencitacted: true,
     role: 'admin'
 }
 

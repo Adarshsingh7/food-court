@@ -35,14 +35,17 @@ export interface CartType {
 }
 
 export interface OrderItem {
-  item: itemType;
+  price: number;
+  productName: string;
   quantity: number;
+  unit: string;
 }
 
 export interface Order {
-  id: number;
+  id: number | string; 
   address: string;
   phone: number;
+  status: string;
   customerName: string;
   orderItem: OrderItem[];
 }

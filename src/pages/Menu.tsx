@@ -20,7 +20,7 @@ import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { Button } from '../components/Button'
+import { Button } from "../components/Button";
 import { Link } from "react-router-dom";
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
@@ -330,11 +330,11 @@ export default function Example() {
           <div className="flex">
             <Search />
             <span className="w-32">
-              {cartItem.length !== 0 && <Link to='/order'>
-                <Button>
-                  Order Now
-                </Button>
-              </Link>}
+              {cartItem.length !== 0 && (
+                <Link to="/order">
+                  <Button color="#8BC34A">Order Now</Button>
+                </Link>
+              )}
             </span>
           </div>
           <div className="flex items-baseline justify-between border-b border-gray-200">

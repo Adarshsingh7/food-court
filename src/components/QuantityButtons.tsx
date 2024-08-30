@@ -36,7 +36,7 @@ const QuantityButton: FC<QuantityButtonProps> = function ({
         </IconButton>
       )}
       {quantity === 0 ? (
-        <SmallButton onClick={() => handleQuantityChange(1)} color="#357A38">
+        <SmallButton onClick={() => handleQuantityChange(1)} color="#8BC34A">
           Add to cart
         </SmallButton>
       ) : (

@@ -1,4 +1,4 @@
-import { Button, IconButton } from "./Button";
+import { Button, IconButton, SmallButton } from "./Button";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/RemoveCircle";
 import { FC } from "react";
@@ -29,24 +29,32 @@ const QuantityButton: FC<QuantityButtonProps> = function ({
   }
 
   return (
-    <div className="flex items-center rounded-lg py-1">
+    <div className="flex items-end rounded-lg py-1">
       {quantity > 0 && (
         <IconButton onClick={() => handleQuantityChange(-1)}>
           <RemoveIcon fontSize="medium" />
         </IconButton>
       )}
-      {quantity === 0 ? <Button onClick={() => handleQuantityChange(1)}>Add to cart</Button> :  <>
-        <input
-          type="number"
-          value={quantity}
-          readOnly
-          className="w-8 text-center bg-transparent outline-none"
-        />
-        <IconButton onClick={() => handleQuantityChange(1)} disabled={currentProductCount === 0}>
-          <AddIcon fontSize="medium" />
-        </IconButton>
-      </>
-      }
+      {quantity === 0 ? (
+        <SmallButton onClick={() => handleQuantityChange(1)} color="#357A38">
+          Add to cart
+        </SmallButton>
+      ) : (
+        <>
+          <input
+            type="number"
+            value={quantity}
+            readOnly
+            className="w-8 text-center bg-transparent outline-none"
+          />
+          <IconButton
+            onClick={() => handleQuantityChange(1)}
+            disabled={currentProductCount === 0}
+          >
+            <AddIcon fontSize="medium" />
+          </IconButton>
+        </>
+      )}
     </div>
   );
 };

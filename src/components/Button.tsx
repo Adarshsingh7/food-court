@@ -2,15 +2,18 @@ import { ButtonHTMLAttributes, FC, PropsWithChildren } from "react";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   additionalClasses?: string;
+  color?: string;
 };
 
 const Button: FC<PropsWithChildren<ButtonProps>> = ({
   children,
   additionalClasses = "",
+  color,
   ...props
 }) => {
   return (
     <button
+      style={{ backgroundColor: color }}
       className={`bg-red hover:opacity-80 text-white px-4 py-2 rounded-md focus:outline-none ${additionalClasses}`}
       {...props}
     >
@@ -33,4 +36,20 @@ const IconButton: FC<PropsWithChildren<ButtonProps>> = ({
   );
 };
 
-export { Button, IconButton };
+const SmallButton: FC<PropsWithChildren<ButtonProps>> = ({
+  children,
+  color = "red",
+  ...props
+}) => {
+  return (
+    <button
+      style={{ backgroundColor: color }}
+      className={`bg-red hover:opacity-80 text-white px-2 py-1 rounded-md focus:outline-none md:text-sm text-xs`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+export { Button, IconButton, SmallButton };

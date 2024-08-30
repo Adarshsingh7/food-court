@@ -1,4 +1,4 @@
-import { Button, IconButton, SmallButton } from "./Button";
+import { IconButton, SmallButton } from "./Button";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/RemoveCircle";
 import { FC } from "react";

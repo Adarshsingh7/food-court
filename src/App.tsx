@@ -2,18 +2,21 @@
 
 import { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { action as authAction } from './pages/Login.tsx'
+import { action as orderAction } from "./components/OrderFrom.tsx";
+import { Provider } from "react-redux";
+
 import AppLayout from "./AppLayout";
 import Hero from "./pages/Hero";
 import Menu from "./pages/Menu";
-import { Provider } from "react-redux";
 import store from "./store.ts";
 import Order from "./pages/Order.tsx";
-import { action as orderAction } from "./components/OrderFrom.tsx";
 import OrdersDetail from "./pages/OrdersDetail.tsx";
 import AuthRoute from "./components/AuthRoute.tsx";
 import User from "./pages/User.tsx";
 import ManageUser from "./pages/ManageUser.tsx";
 import OrderDetails from "./pages/OrderDetails.tsx";
+import Login from "./pages/Login.tsx";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +65,11 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: '/login',
+    element: <Login />,
+    action: authAction
+  }
 ]);
 
 const App: FC = function () {

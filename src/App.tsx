@@ -2,8 +2,9 @@
 
 import { FC } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { action as authAction } from './pages/Login.tsx'
 import { action as orderAction } from "./components/OrderFrom.tsx";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Provider } from "react-redux";
 
 import AppLayout from "./AppLayout";
@@ -16,11 +17,25 @@ import AuthRoute from "./components/AuthRoute.tsx";
 import User from "./pages/User.tsx";
 import ManageUser from "./pages/ManageUser.tsx";
 import OrderDetails from "./pages/OrderDetails.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import Signup from "./pages/Signup.tsx";
 import Login from "./pages/Login.tsx";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 0
+    },
+  },
+})
 
 const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         path: "/",
@@ -66,17 +81,23 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/signup",
+    element: <Signup />,
+  },
+  {
     path: '/login',
-    element: <Login />,
-    action: authAction
+    element: <Login/>
   }
 ]);
 
 const App: FC = function () {
   return (
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </QueryClientProvider>
   );
 };
 

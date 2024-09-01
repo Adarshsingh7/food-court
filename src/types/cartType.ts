@@ -49,3 +49,15 @@ export interface Order {
   customerName: string;
   orderItem: OrderItem[];
 }
+
+export interface ResponseType {
+  status: string;
+  error: boolean; 
+  message: string;
+  $id: string;
+  $collectionId: string;
+  $databaseId: string;
+  $createdAt: string;
+  $updatedAt: string;
+  $permissions: string[];
+}

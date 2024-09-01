@@ -6,9 +6,9 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
     const { user, isLoading } = useUser()
     const navigate = useNavigate()
     useEffect(() => {
-        if(!user) navigate(-1)
-    }, [user, navigate])
-    if (isLoading) return <div>loading....</div>
+        if(!user && !isLoading) navigate('/signup')
+    }, [user,isLoading, navigate])
+    // if (isLoading) return <div>loading....</div>
     return children
 }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useSignup } from "../queries/useSignup";
+import { Link } from "react-router-dom";
 
 interface DataType {
     email: string;
@@ -13,20 +14,19 @@ interface DataType {
 }
 
 function Signup() {
-    const { register, handleSubmit } = useForm<DataType>()
+    const { register, handleSubmit, formState: { errors }, getValues } = useForm<DataType>()
     const { signUp } = useSignup()
 
     const [isLoading, setIsLoading] = useState(false)
 
     const onSubmit: SubmitHandler<DataType> = (data: DataType) => {
-        const { password, confirmPassword } = data
-        if (password !== confirmPassword) return
         setIsLoading(true)
-        signUp(data)
-        setIsLoading(false)
+        signUp(data, {
+            onSettled: () => {
+                setIsLoading(false)
+            }
+        })
     }
-
-    if (isLoading) return <div>loading .....</div>
 
     return (
         <div className="flex justify-center items-center w-screen h-screen">
@@ -35,7 +35,7 @@ function Signup() {
                 className="flex flex-col justify-between w-[33rem] mx-auto"
             >
                 <div className="flex justify-between mx-4">
-                    <div className="mb-5">
+                    <div className="w-1/2 mb-5">
                         <label
                             htmlFor="email"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -48,11 +48,15 @@ function Signup() {
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             placeholder="name@gamil.com"
                             {...register('email', {
-                                required: 'this feils is required'
+                                required: 'This field is required'
                             })}
                         />
+                        {errors?.email?.message && (
+                            <div className="text-rose-700 text-sm">{errors.email.message}</div>
+                        )}
                     </div>
-                    <div className="mb-5">
+
+                    <div className="w-1/2 mb-5 ml-4">
                         <label
                             htmlFor="userName"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -64,13 +68,17 @@ function Signup() {
                             id="userName"
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             {...register('userName', {
-                                required: 'this feils is required'
+                                required: 'This field is required'
                             })}
                         />
+                        {errors?.userName?.message && (
+                            <div className="text-rose-700 text-sm">{errors.userName.message}</div>
+                        )}
                     </div>
                 </div>
-                <div className="flex justify-between mr-4">
-                    <div className="mb-5">
+
+                <div className="flex justify-between mx-4">
+                    <div className="w-1/2 mb-5">
                         <label
                             htmlFor="phone"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -82,11 +90,19 @@ function Signup() {
                             id="phone"
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             {...register('phone', {
-                                required: 'this feils is required'
+                                required: 'This field is required',
+                                minLength: {
+                                    value: 10,
+                                    message: 'Phone number must be 10 digits'
+                                }
                             })}
                         />
+                        {errors?.phone?.message && (
+                            <div className="text-rose-700 text-sm">{errors.phone.message}</div>
+                        )}
                     </div>
-                    <div className="mb-5">
+
+                    <div className="w-1/2 mb-5 ml-4">
                         <label
                             htmlFor="address"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -98,13 +114,17 @@ function Signup() {
                             id="address"
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             {...register('address', {
-                                required: 'this feils is required'
+                                required: 'This field is required'
                             })}
                         />
+                        {errors?.address?.message && (
+                            <div className="text-rose-700 text-sm">{errors.address.message}</div>
+                        )}
                     </div>
                 </div>
-                <div className="flex justify-between mr-4">
-                    <div className="mb-5">
+
+                <div className="flex justify-between mx-4">
+                    <div className="w-1/2 mb-5">
                         <label
                             htmlFor="password"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -116,11 +136,19 @@ function Signup() {
                             id="password"
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             {...register('password', {
-                                required: 'this feils is required'
+                                required: 'This field is required',
+                                minLength: {
+                                    value: 8,
+                                    message: 'Password must be 8 characters'
+                                }
                             })}
                         />
+                        {errors?.password?.message && (
+                            <div className="text-rose-700 text-sm">{errors.password.message}</div>
+                        )}
                     </div>
-                    <div className="mb-5">
+
+                    <div className="w-1/2 mb-5 ml-4">
                         <label
                             htmlFor="confirmPassword"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -132,25 +160,40 @@ function Signup() {
                             id="confirmPassword"
                             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                             {...register('confirmPassword', {
-                                required: 'this feils is required'
+                                required: 'This field is required',
+                                validate: (value: string) => {
+                                    if (value !== getValues().password) {
+                                        return 'Passwords do not match';
+                                    }
+                                    return true;
+                                }
                             })}
                         />
+                        {errors?.confirmPassword?.message && (
+                            <div className="text-rose-700 text-sm">
+                                {errors.confirmPassword.message}
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="block items-start mb-5">
+
+                <div className="block items-start mb-5 mx-4">
                     <p className="mb-3">Select your role:</p>
                     <div className="mb-4 items-center h-5">
                         <select
                             className="w-full rounded-md p-3"
                             id="role"
                             {...register('role', {
-                                required: 'this feils is required'
+                                required: 'this field is required'
                             })}
                         >
                             <option value="user">User</option>
                             <option value="admin">Admin</option>
                         </select>
                     </div>
+                    {errors?.role?.message && (
+                        <div className="text-rose-700 text-sm">{errors.role.message}</div>
+                    )}
                     <div className="flex items-start my-9">
                         <div className="flex items-center h-5">
                             <input
@@ -174,14 +217,24 @@ function Signup() {
                         </label>
                     </div>
                 </div>
+
+                <div className="flex mx-4">
+                    <span className="mb-4">Already have an account? </span>
+                    <Link className="ml-2 text-blue-600" to="/login">
+                        Login
+                    </Link>
+                </div>
+
                 <button
                     type="submit"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="text-white bg-blue-700 w-full hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                    Register new account
+                    {isLoading ? "Signing In...." : "Register new account"}
                 </button>
             </form>
         </div>
+
+
     );
 }
 

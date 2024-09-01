@@ -1,5 +1,5 @@
 import { databases, account, ID } from "../lib/appwrite";
-import { ResponseType } from "../types/cartType";
+import { LoginResposeType, ResponseType, UserType } from "../types/cartType";
 
 export const signUp = async (data: {
   email: string;
@@ -16,10 +16,7 @@ export const signUp = async (data: {
       data.password,
       data.userName,
     );
-
-    const sessionData = await account.createEmailPasswordSession(data.email, data.password);
-    // account.client.config.session = sessionData.$id
-    console.log(sessionData)
+    await account.createEmailPasswordSession(data.email, data.password);
     const res = await databases.createDocument(
       "66d2783a00162bcb82a6",
       "66d2785e00363e3bae0f",
@@ -31,8 +28,6 @@ export const signUp = async (data: {
         role: data.role,
       },
     );
-
-    // Ensure the `res` object matches the `Response` interface
     return {
       ...res,
       status: "success",
@@ -45,20 +40,45 @@ export const signUp = async (data: {
   }
 };
 
-export const logIn = async (data: {email: string, password: string}): Promise<void> => {
+export const logIn = async (data: { email: string, password: string }): Promise<LoginResposeType> => {
   try {
     const response = await account.createEmailPasswordSession(data.email, data.password);
-    // account.client.config.session = response.$id
-    console.log("Login successful:", response);
+    return {
+      $id: response.$id,
+      $createdAt: response.$createdAt,
+      $updatedAt: response.$updatedAt,
+      status: 'succuss',
+      providerUid: response.providerUid,
+      ip: response.ip,
+      factors: response.factors,
+      expire: response.expire,
+      userId: response.userId,
+      provider: response.provider,
+      osCode: response.osCode,
+      cleintName: response.clientName,
+      secret: response.secret,
+      deviceName: response.deviceName
+    }
   } catch (error) {
     throw new Error("Login failed");
   }
 };
 
-export const getCurrentUser = async (): Promise<void> => {
+export const getCurrentUser = async (): Promise<UserType | undefined> => {
   try {
     const user = await account.get();
-    console.log("Current user:", user);
+    // console.log("Current user:", user);
+    return {
+      $id: user.$id,
+      $createdAt: user.$createdAt,
+      $updatedAt: user.$updatedAt,
+      name: user.name,
+      email: user.email,
+      status: user.status,
+      emailVerification: user.emailVerification,
+      phoneVerification: user.phoneVerification,
+      phone: user.phone
+    }
   } catch (error) {
     console.error("Failed to get current user:", error);
   }

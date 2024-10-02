@@ -2,34 +2,37 @@
 
 import { FC } from 'react';
 import QuantityButton from './QuantityButtons';
-import { itemType } from '../types/cartType';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { getCurrentQuantity } from '../slice/productSlice';
 import { Badge } from '@mui/material';
+import { MenuItem } from '../types/menuType';
+import { totalAddedQuantity } from '../slice/cartSlice';
 
 interface ProductListProps {
-	item: itemType;
+	item: MenuItem;
 }
 
 const ProductList: FC<ProductListProps> = function ({ item }) {
 	const cartItems = useSelector((state: RootState) => state.cart.items);
-	const cartItem = cartItems.find((cartItem) => cartItem.itemId === item.id);
-	const currentPorductCount = useSelector(getCurrentQuantity(item.id));
+	const cartItem = cartItems.find(
+		(cartItem) => cartItem.itemId === item.itemId
+	);
+	const totalItemQuantity =
+		item.stock - useSelector(totalAddedQuantity(cartItem?.itemId || 0));
 
 	const badgeContent =
-		currentPorductCount > 10
+		totalItemQuantity > 10
 			? ''
-			: currentPorductCount > 5
+			: totalItemQuantity > 5
 			? 'FEW LEFT'
-			: currentPorductCount === 0
+			: totalItemQuantity === 0
 			? 'OUT OF STOCK'
-			: `${currentPorductCount} LEFT`;
+			: `${totalItemQuantity} LEFT`;
 
 	const badgeColor =
-		currentPorductCount > 10
+		totalItemQuantity > 10
 			? 'default'
-			: currentPorductCount > 5
+			: totalItemQuantity > 5
 			? 'warning'
 			: `error`;
 
@@ -39,40 +42,38 @@ const ProductList: FC<ProductListProps> = function ({ item }) {
 			color={badgeColor}
 			// sx={{ color: '000' }}
 		>
-			<div className='mb-1 flex rounded-lg border border-gray-200 bg-white p-2 shadow-md'>
+			<div className='max-w-sm overflow-hidden rounded shadow-lg'>
 				<img
-					src={item.src}
-					alt={item.productName}
-					className='h-full w-32 rounded object-cover md:w-1/3 lg:w-1/4'
+					// className='w-full'
+					className='h-[200px] w-[300px] rounded object-cover '
+					src={item.image}
+					alt={item.name}
 				/>
-				<div className='ml-4 flex w-full flex-col justify-between'>
-					<div>
-						<h3 className='text-sm font-semibold text-gray-800 sm:text-base md:text-lg lg:text-xl capitalize'>
-							{item.productName}
-						</h3>
-						<p className='text-[10px] text-gray-600 sm:text-xs md:text-base lg:text-lg'>
-							{item.description}
-						</p>
+				<div className='px-6 py-4'>
+					<div className='mb-2 md:text-base line-clamp-1 text-sm font-bold capitalize'>
+						{item.name}
 					</div>
-					<div className='mt-2 flex items-center'>
-						<div className='flex justify-between w-full'>
-							<div className='mt-6'>
-								<span className='ml-2 text-sm font-semibold text-gray-800 sm:text-base md:text-lg lg:text-xl'>
-									₹{item.price}
-								</span>
-							</div>
-							{cartItem ? (
-								<QuantityButton
-									quantity={cartItem.quantity}
-									itemId={item.id}
-								/>
-							) : (
-								<QuantityButton
-									quantity={0}
-									itemId={item.id}
-								/>
-							)}
+					<p className='md:text-md text-xs line-clamp-2 text-gray-700'>
+						{item.description}
+					</p>
+					{/* <ButtonMinimal>Outlined</ButtonMinimal> */}
+					<div className='flex justify-between w-full'>
+						<div className='mt-6'>
+							<span className='ml-2 text-sm font-semibold text-gray-800 sm:text-base md:text-lg lg:text-xl'>
+								₹{item.price}
+							</span>
 						</div>
+						{cartItem ? (
+							<QuantityButton
+								quantity={cartItem.quantity}
+								itemId={item.itemId}
+							/>
+						) : (
+							<QuantityButton
+								quantity={0}
+								itemId={item.itemId}
+							/>
+						)}
 					</div>
 				</div>
 			</div>

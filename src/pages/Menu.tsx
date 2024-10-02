@@ -24,6 +24,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { Button } from '../components/Button';
 import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { MenuItem } from '../types/menuType';
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
 	return classes.filter(Boolean).join(' ');
@@ -293,13 +295,18 @@ function SortMenu() {
 
 // ProductGrid Component
 function ProductGrid() {
-	const products = useSelector((state: RootState) => state.product);
+	const { data, error, isLoading } = useQuery<MenuItem[]>({
+		queryKey: ['menuItem'],
+	});
+	if (isLoading) return <div>Loading...</div>;
+	if (error instanceof Error) return <div>Error: {error.message}</div>;
+	if (!data) return <div>No data found</div>;
 	return (
-		<div className='flex flex-col gap-3'>
-			{products.map((product) => (
+		<div className='grid md:grid-cols-3 grid-cols-2 gap-2'>
+			{data.map((product) => (
 				<ProductList
 					item={product}
-					key={product.id}
+					key={product.itemId}
 				/>
 			))}
 		</div>

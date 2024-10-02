@@ -1,13 +1,17 @@
 /** @format */
 
-import { useSelector } from 'react-redux';
 import QuantityButton from '../components/QuantityButtons';
 import { Star, Favorite } from '@mui/icons-material';
-import { RootState } from '../store';
 import { BiRupee } from 'react-icons/bi';
+import { useMenu } from '../features/menuFeatures/useMenu';
 
 function ProductOverview() {
-	const item = useSelector((state: RootState) => state.product[0]);
+	const { data, isLoading, error } = useMenu();
+	const item = data?.find((item) => item.itemId === 1);
+
+	if (isLoading) return <div>Loading...</div>;
+	if (error) return <div>Error: {error.message}</div>;
+	if (!item) return <div>No data</div>;
 
 	return (
 		<section className='py-8 bg-white md:py-16 antialiased'>
@@ -16,14 +20,14 @@ function ProductOverview() {
 					<div className='shrink-0 max-w-md lg:max-w-lg mx-auto'>
 						<img
 							className='w-full'
-							src={item.src}
-							alt={item.productName}
+							src={item.image}
+							alt={item.name}
 						/>
 					</div>
 
 					<div className='mt-6 sm:mt-8 lg:mt-0'>
 						<h1 className='text-xl font-semibold text-gray-900 sm:text-2xl'>
-							{item.productName}
+							{item.name}
 						</h1>
 						<div className='mt-4 flex items-center justify-between sm:gap-4 flex-col'>
 							<p className='text-2xl font-extrabold text-gray-900 sm:text-3xl'>

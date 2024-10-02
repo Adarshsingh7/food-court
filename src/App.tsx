@@ -1,6 +1,7 @@
 /** @format */
 
 import { FC } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AppLayout from './AppLayout';
 import Hero from './pages/Hero';
@@ -16,6 +17,16 @@ import ManageUser from './pages/ManageUser.tsx';
 import OrderDetails from './pages/OrderDetails.tsx';
 import Login from './pages/Login.tsx';
 import ProductOverview from './pages/productOverview.tsx';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			// staleTime: 60 * 1000,
+			staleTime: 0,
+		},
+	},
+});
 
 const router = createBrowserRouter([
 	{
@@ -75,9 +86,12 @@ const router = createBrowserRouter([
 
 const App: FC = function () {
 	return (
-		<Provider store={store}>
-			<RouterProvider router={router} />
-		</Provider>
+		<QueryClientProvider client={queryClient}>
+			<ReactQueryDevtools initialIsOpen={false} />
+			<Provider store={store}>
+				<RouterProvider router={router} />
+			</Provider>
+		</QueryClientProvider>
 	);
 };
 

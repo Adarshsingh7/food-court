@@ -26,6 +26,8 @@ import {
 import Cart from './Cart.tsx';
 import { Link } from 'react-router-dom';
 import { FAKE_USER } from './AuthRoute.tsx';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store.ts';
 
 const navigation = {
 	categories: [
@@ -162,6 +164,7 @@ const navigation = {
 export default function NavBar() {
 	const [open, setOpen] = useState(false);
 	const [cartOpen, setCartOpen] = useState(false);
+	const { items } = useSelector((store: RootState) => store.cart);
 
 	return (
 		<div className='bg-white'>
@@ -549,7 +552,7 @@ export default function NavBar() {
 											className='h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500'
 										/>
 										<span className='ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800'>
-											0
+											{items.length > 0 ? items.length : ''}
 										</span>
 										<span className='sr-only'>items in cart, view bag</span>
 									</Link>

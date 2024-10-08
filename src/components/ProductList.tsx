@@ -13,6 +13,7 @@ interface ProductListProps {
 }
 
 const ProductList: FC<ProductListProps> = function ({ item }) {
+	console.log(item);
 	const cartItems = useSelector((state: RootState) => state.cart.items);
 	const cartItem = cartItems.find(
 		(cartItem) => cartItem.itemId === item.itemId

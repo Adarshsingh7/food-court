@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState, FC } from 'react';
+import { useState, FC, ChangeEvent } from 'react';
 import {
 	Dialog,
 	DialogBackdrop,
@@ -26,6 +26,7 @@ import { Button } from '../components/Button';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { MenuItem } from '../types/menuType';
+import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
 	return classes.filter(Boolean).join(' ');
@@ -68,47 +69,48 @@ const sortOptions: SortOption[] = [
 ];
 
 const subCategories: SubCategory[] = [
-	{ name: 'Pizza', href: '#' },
-	{ name: 'Burgers', href: '#' },
-	{ name: 'Sushi', href: '#' },
-	{ name: 'Desserts', href: '#' },
-	{ name: 'Drinks', href: '#' },
+	{ name: 'appetizer	', href: '#' },
+	{ name: 'main course', href: '#' },
+	{ name: 'dessert', href: '#' },
+	{ name: 'beverages', href: '#' },
+	{ name: 'snacks', href: '#' },
+	{ name: 'vegetable', href: '#' },
 ];
 
 const filters: Filter[] = [
-	{
-		id: 'cuisine',
-		name: 'Cuisine',
-		options: [
-			{ value: 'italian', label: 'Italian', checked: false },
-			{ value: 'american', label: 'American', checked: false },
-			{ value: 'japanese', label: 'Japanese', checked: true },
-			{ value: 'mexican', label: 'Mexican', checked: false },
-			{ value: 'indian', label: 'Indian', checked: false },
-			{ value: 'chinese', label: 'Chinese', checked: false },
-		],
-	},
-	{
-		id: 'dietary',
-		name: 'Dietary Options',
-		options: [
-			{ value: 'vegetarian', label: 'Vegetarian', checked: false },
-			{ value: 'vegan', label: 'Vegan', checked: false },
-			{ value: 'gluten-free', label: 'Gluten-Free', checked: true },
-			{ value: 'halal', label: 'Halal', checked: false },
-			{ value: 'kosher', label: 'Kosher', checked: false },
-		],
-	},
-	{
-		id: 'portion',
-		name: 'Portion Size',
-		options: [
-			{ value: 'small', label: 'Small', checked: false },
-			{ value: 'medium', label: 'Medium', checked: false },
-			{ value: 'large', label: 'Large', checked: true },
-			{ value: 'family', label: 'Family Size', checked: false },
-		],
-	},
+	// {
+	// 	id: 'cuisine',
+	// 	name: 'Cuisine',
+	// 	options: [
+	// 		{ value: 'italian', label: 'Italian', checked: false },
+	// 		{ value: 'american', label: 'American', checked: false },
+	// 		{ value: 'japanese', label: 'Japanese', checked: true },
+	// 		{ value: 'mexican', label: 'Mexican', checked: false },
+	// 		{ value: 'indian', label: 'Indian', checked: false },
+	// 		{ value: 'chinese', label: 'Chinese', checked: false },
+	// 	],
+	// },
+	// {
+	// 	id: 'dietary',
+	// 	name: 'Dietary Options',
+	// 	options: [
+	// 		{ value: 'vegetarian', label: 'Vegetarian', checked: false },
+	// 		{ value: 'vegan', label: 'Vegan', checked: false },
+	// 		{ value: 'gluten-free', label: 'Gluten-Free', checked: true },
+	// 		{ value: 'halal', label: 'Halal', checked: false },
+	// 		{ value: 'kosher', label: 'Kosher', checked: false },
+	// 	],
+	// },
+	// {
+	// 	id: 'portion',
+	// 	name: 'Portion Size',
+	// 	options: [
+	// 		{ value: 'small', label: 'Small', checked: false },
+	// 		{ value: 'medium', label: 'Medium', checked: false },
+	// 		{ value: 'large', label: 'Large', checked: true },
+	// 		{ value: 'family', label: 'Family Size', checked: false },
+	// 	],
+	// },
 ];
 
 interface MobileFilterDialogProps {
@@ -174,26 +176,40 @@ const MobileFilterDialog: FC<MobileFilterDialogProps> = function ({
 };
 
 // CategoryList Component
-const CategoryList: FC<CategoryListProps> = function ({ categories }) {
+const CategoryList: FC<CategoryListProps> = ({ categories }) => {
+	const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+	const handleCategoryChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const { checked, name } = event.target;
+		if (checked) {
+			setSelectedCategories((prevCategories) => [...prevCategories, name]);
+		} else {
+			setSelectedCategories((prevCategories) =>
+				prevCategories.filter((category) => category !== name)
+			);
+		}
+	};
+
 	return (
-		<>
+		<div>
 			<h3 className='sr-only'>Categories</h3>
-			<ul
-				role='list'
-				className='px-2 py-3 font-medium text-gray-900'
-			>
+			<FormGroup className='px-2 py-3 font-medium text-gray-900'>
 				{categories.map((category) => (
-					<li key={category.name}>
-						<a
-							href={category.href}
-							className='block px-2 py-3'
-						>
-							{category.name}
-						</a>
-					</li>
+					<FormControlLabel
+						className='capitalize'
+						key={category.name}
+						control={
+							<Checkbox
+								checked={selectedCategories.includes(category.name)}
+								onChange={handleCategoryChange}
+								name={category.name}
+							/>
+						}
+						label={category.name}
+					/>
 				))}
-			</ul>
-		</>
+			</FormGroup>
+		</div>
 	);
 };
 

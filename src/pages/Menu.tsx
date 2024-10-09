@@ -22,7 +22,7 @@ import ProductList from '../components/ProductList';
 import Pagination from '../components/Pagination';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import { Button } from '../components/Button';
+import { Button } from '../ui/Button';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { MenuItem } from '../types/menuType';

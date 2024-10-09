@@ -1,6 +1,6 @@
 /** @format */
 
-import { Button } from './Button';
+import { Button } from '../ui/Button';
 
 interface AddProductFormProps {
 	onClose: () => void;

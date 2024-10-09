@@ -2,11 +2,12 @@
 
 import { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../store';
-import NoData from './NoData';
-import { CartItemType } from '../types/cartType';
-import QuantityButton from '../components/QuantityButtons';
-import { order } from '../features/order/order';
+import { RootState } from '../../store';
+import NoData from '../../ui/NoData';
+import { CartItemType } from '../../types/cartType';
+import QuantityButton from '../../components/QuantityButtons';
+import { order } from './order';
+import { useNavigate } from 'react-router-dom';
 
 const ShoppingCart: FC = () => {
 	const { amount, items: cartItems } = useSelector(
@@ -17,7 +18,7 @@ const ShoppingCart: FC = () => {
 		order.getAllOrders();
 	}, []);
 
-	if (!cartItems) return <NoData />;
+	if (!cartItems.length) return <NoData />;
 
 	return (
 		<section className='py-24 relative'>
@@ -127,6 +128,7 @@ const PlaceOrder: FC<{ items: CartItemType[]; amount: number }> = ({
 	items,
 	amount,
 }) => {
+	const navigate = useNavigate();
 	async function createOrder() {
 		const response = await order.createOrder({
 			user: '66ec41a247edd8686aa758d8',
@@ -140,8 +142,9 @@ const PlaceOrder: FC<{ items: CartItemType[]; amount: number }> = ({
 				quantity: item.quantity,
 			})),
 		});
-
-		console.log(response);
+		if (response) {
+			navigate(`/order/${response._id}`);
+		}
 	}
 
 	return (

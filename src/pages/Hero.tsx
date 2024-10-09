@@ -1,9 +1,9 @@
 /** @format */
 import { FC, PropsWithChildren } from 'react';
 
-import CtaSection from '../components/CtaSection.tsx';
+import CtaSection from '../ui/CtaSection.tsx';
 import Feature from '../components/Feature.tsx';
-import { Button } from './../components/Button.tsx';
+import { Button } from '../ui/Button.tsx';
 import { useMenu } from '../features/menuFeatures/useMenu.ts';
 import ProductList from '../components/ProductList.tsx';
 

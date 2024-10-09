@@ -1,12 +1,13 @@
 /** @format */
 
+import { FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-function NoData() {
+const NoData: FC<{ message?: string }> = ({ message }) => {
 	const navigate = useNavigate();
 
 	return (
-		<div className='w-full h-full flex items-center flex-wrap justify-center gap-10'>
+		<div className='w-full h-full my-20 flex items-center flex-wrap justify-center gap-10'>
 			<div className='grid gap-4 w-60'>
 				<svg
 					className='mx-auto'
@@ -101,7 +102,7 @@ function NoData() {
 				</svg>
 				<div>
 					<h2 className='text-center text-black text-base font-semibold leading-relaxed pb-1'>
-						There’s no product here
+						{message || 'There’s no product here'}
 					</h2>
 					<p className='text-center text-black text-sm font-normal leading-snug pb-4'>
 						Try changing your filters or add something first <br />
@@ -120,6 +121,6 @@ function NoData() {
 			</div>
 		</div>
 	);
-}
+};
 
 export default NoData;

@@ -8,15 +8,14 @@ import Hero from './pages/Hero';
 import Menu from './pages/Menu';
 import { Provider } from 'react-redux';
 import store from './store.ts';
-import { action as orderAction } from './components/OrderFrom.tsx';
-import OrdersDetail from './pages/OrdersDetail.tsx';
 import AuthRoute from './components/AuthRoute.tsx';
 import User from './pages/User.tsx';
 import ManageUser from './pages/ManageUser.tsx';
-import OrderDetails from './pages/OrderDetails.tsx';
+import OrderDetails from './features/order/OrderDetails.tsx';
 import Login from './pages/Login.tsx';
 import ProductOverview from './pages/productOverview.tsx';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import SimpleBackdrop from './components/BackdropLoader.tsx';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -47,11 +46,6 @@ const router = createBrowserRouter([
 				element: <div>cart</div>,
 			},
 			{
-				path: '/order',
-				element: <OrderDetails />,
-				action: orderAction,
-			},
-			{
 				path: '/user',
 				element: <User />,
 			},
@@ -68,15 +62,7 @@ const router = createBrowserRouter([
 				),
 			},
 			{
-				path: '/allorders',
-				element: (
-					<AuthRoute roles={['admin']}>
-						<OrdersDetail />
-					</AuthRoute>
-				),
-			},
-			{
-				path: '/order/:id',
+				path: '/order',
 				element: <OrderDetails />,
 			},
 		],

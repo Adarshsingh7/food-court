@@ -1,7 +1,7 @@
 /** @format */
 
-import { Button } from './Button';
-import { Order, OrderItem } from '../types/cartType';
+import { Button } from '../../ui/Button';
+import { Order, OrderItem } from '../../types/cartType';
 import { useNavigate } from 'react-router-dom';
 
 const OrderDetailList = ({ order }: { order: Order }) => {

@@ -5,6 +5,7 @@ export interface OrderItem {
 	variant?: string; // Variant is a mixed type, so we use Record<string, any>
 	quantity: number;
 	price: number;
+	_id?: string;
 }
 
 export interface Order {
@@ -13,6 +14,9 @@ export interface Order {
 	user: string; // User will also be a MongoDB ObjectId (string type)
 	items: OrderItem[]; // Array of OrderItem objects
 	totalAmount: number;
+	recipientName: string;
+	recipientEmail: string;
+	recipientPhoneNumber: string;
 	status: 'new' | 'preparing' | 'completed' | 'cancelled'; // Enum for status
 	paymentStatus: 'pending' | 'paid' | 'failed'; // Enum for payment status
 	paymentMethod: 'cash' | 'card' | 'online'; // Enum for payment method

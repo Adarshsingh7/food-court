@@ -10,9 +10,7 @@ interface Variant {
 }
 
 interface MenuItem {
-	_id: {
-		$oid: string;
-	};
+	_id: string;
 	name: string;
 	description: string;
 	price: number;
@@ -45,9 +43,7 @@ interface Variant {
 }
 
 interface MenuItem {
-	_id: {
-		$oid: string;
-	};
+	_id: string;
 	name: string;
 	itemId: number;
 	description: string;

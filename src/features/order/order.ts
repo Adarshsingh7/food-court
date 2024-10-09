@@ -14,6 +14,7 @@ class OrderService {
 				'Content-Type': 'application/json',
 			},
 		});
+		this.getOrder = this.getOrder.bind(this);
 	}
 
 	// Get all orders
@@ -32,8 +33,9 @@ class OrderService {
 	// Get a single order by ID
 	public async getOrder(id: string): Promise<Order> {
 		try {
-			const response: AxiosResponse<Order> = await this.api.get(`/${id}`);
-			return response.data;
+			const response: AxiosResponse<{ data: { data: Order } }> =
+				await this.api.get(`/${id}`);
+			return response.data.data.data;
 		} catch (error) {
 			console.error(`Error fetching order with id ${id}:`, error);
 			throw error;

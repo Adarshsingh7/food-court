@@ -1,52 +1,21 @@
 /** @format */
 
 import { FC, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import NoData from '../../ui/NoData';
 import { CartItemType } from '../../types/cartType';
 import QuantityButton from '../../components/QuantityButtons';
 import { order } from './order';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { emptyCart } from '../../slice/cartSlice';
 
-const ShoppingCart: FC = () => {
-	const { amount, items: cartItems } = useSelector(
-		(store: RootState) => store.cart
-	);
-
-	useEffect(() => {
-		order.getAllOrders();
-	}, []);
-
-	if (!cartItems.length) return <NoData />;
-
-	return (
-		<section className='py-24 relative'>
-			<div className='w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto'>
-				<h2 className='font-manrope font-bold text-4xl leading-10 mb-8 text-center text-black'>
-					Shopping Cart
-				</h2>
-
-				{/* Cart Table Header */}
-				<CartHeader />
-
-				{/* Cart Items */}
-				{cartItems.map((item) => (
-					<CartItem item={item} />
-				))}
-
-				{/* Summary Section */}
-				<CartSummary amount={amount} />
-
-				{/* Action Buttons */}
-				<PlaceOrder
-					items={cartItems}
-					amount={amount}
-				/>
-			</div>
-		</section>
-	);
-};
+interface ReciptType {
+	name: string;
+	email: string;
+	contact: string;
+}
 
 const CartItem: FC<{ item: CartItemType }> = ({ item }) => {
 	const { item: product } = item;
@@ -124,12 +93,59 @@ const CartSummary: FC<{ amount: number }> = ({ amount }) => {
 	);
 };
 
-const PlaceOrder: FC<{ items: CartItemType[]; amount: number }> = ({
-	items,
-	amount,
-}) => {
+const ShoppingCart: FC = () => {
+	const { amount, items: cartItems } = useSelector(
+		(store: RootState) => store.cart
+	);
+
+	useEffect(() => {
+		order.getAllOrders();
+	}, []);
+
+	if (!cartItems.length) return <NoData />;
+
+	return (
+		<section className='py-24 relative'>
+			<div className='w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto'>
+				<h2 className='font-manrope font-bold text-4xl leading-10 mb-8 text-center text-black'>
+					Food Plate
+				</h2>
+
+				{/* Cart Table Header */}
+				<CartHeader />
+
+				{/* Cart Items */}
+				{cartItems.map((item) => (
+					<CartItem item={item} />
+				))}
+
+				{/* Summary Section */}
+				<CartSummary amount={amount} />
+
+				{/* Action Buttons */}
+				<RecipientDetails
+					items={cartItems}
+					amount={amount}
+				/>
+				{/* <PlaceOrder
+					items={cartItems}
+					amount={amount}
+				/> */}
+			</div>
+		</section>
+	);
+};
+
+const RecipientDetails: FC<{
+	items: CartItemType[];
+	amount: number;
+}> = ({ items, amount }) => {
+	const { register, handleSubmit } = useForm<ReciptType>();
 	const navigate = useNavigate();
-	async function createOrder() {
+	const dispatch = useDispatch();
+
+	async function submitForm(data: ReciptType) {
+		console.log(data);
 		const response = await order.createOrder({
 			user: '66ec41a247edd8686aa758d8',
 			totalAmount: amount,
@@ -141,25 +157,50 @@ const PlaceOrder: FC<{ items: CartItemType[]; amount: number }> = ({
 				price: item.item.price,
 				quantity: item.quantity,
 			})),
+			recipientName: data.name,
+			recipientEmail: data.email,
+			recipientPhoneNumber: data.contact,
 		});
 		if (response) {
+			dispatch(emptyCart());
 			navigate(`/order/${response._id}`);
 		}
 	}
 
 	return (
-		<div className='flex justify-center gap-3 mt-8'>
-			<button className='rounded-full py-4 w-full max-w-[280px] bg-indigo-50 transition hover:bg-indigo-100'>
-				<span className='px-2 font-semibold text-lg text-indigo-600'>
-					Add Coupon Code
-				</span>
-			</button>
-			<button
-				onClick={createOrder}
-				className='rounded-full py-4 w-full max-w-[280px] bg-indigo-600 text-white transition hover:bg-indigo-700'
+		<div className='p-4 mx-auto max-w-xl bg-white font-[sans-serif]'>
+			<h1 className='text-3xl text-gray-800 font-extrabold text-center'>
+				Enter Recipient Details
+			</h1>
+			<form
+				onSubmit={handleSubmit(submitForm)}
+				className='mt-8 space-y-4'
 			>
-				<span className='px-2 font-semibold text-lg'>Place Order</span>
-			</button>
+				<input
+					type='text'
+					{...register('name', { required: true })}
+					placeholder='Name'
+					className='w-full rounded-md py-3 px-4 text-gray-800 bg-gray-100 focus:bg-transparent text-sm outline-blue-500'
+				/>
+				<input
+					type='email'
+					{...register('email', { required: true })}
+					placeholder='username@email.com'
+					className='w-full rounded-md py-3 px-4 text-gray-800 bg-gray-100 focus:bg-transparent text-sm outline-blue-500'
+				/>
+				<input
+					type='text'
+					{...register('contact', { required: true })}
+					placeholder='+123456789'
+					className='w-full rounded-md py-3 px-4 text-gray-800 bg-gray-100 focus:bg-transparent text-sm outline-blue-500'
+				/>
+				<button
+					type='submit'
+					className='w-full bg-blue-500 text-white py-3 rounded-md font-semibold hover:bg-blue-600'
+				>
+					Place Order
+				</button>
+			</form>
 		</div>
 	);
 };

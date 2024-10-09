@@ -15,7 +15,7 @@ import OrderDetails from './features/order/OrderDetails.tsx';
 import Login from './pages/Login.tsx';
 import ProductOverview from './pages/productOverview.tsx';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import SimpleBackdrop from './components/BackdropLoader.tsx';
+import OrderOverview from './features/order/OrderOverview.tsx';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -64,6 +64,10 @@ const router = createBrowserRouter([
 			{
 				path: '/order',
 				element: <OrderDetails />,
+			},
+			{
+				path: '/order/:id',
+				element: <OrderOverview />,
 			},
 		],
 	},

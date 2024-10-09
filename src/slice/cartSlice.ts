@@ -14,6 +14,10 @@ const cartSlice = createSlice({
 	name: 'cart',
 	initialState,
 	reducers: {
+		emptyCart: (state) => {
+			state.items = [];
+			state.amount = 0;
+		},
 		addItem: (state, action: PayloadAction<CartItemType>) => {
 			state.items.push(action.payload);
 			state.amount = state.items.reduce(
@@ -95,6 +99,6 @@ export const totalAddedQuantity = (itemId: number) => (store: RootState) => {
 	} else return 0;
 };
 
-export const { removeItem } = cartSlice.actions;
+export const { removeItem, emptyCart } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -112,9 +112,12 @@ const NoData: FC<{ message?: string }> = ({ message }) => {
 							{' '}
 							<Link to='/'>Home</Link>
 						</button>
-						<button className='w-full px-3 py-2 bg-indigo-600 hover:bg-indigo-700 transition-all duration-500 rounded-full text-white text-xs font-semibold leading-4'>
+						<button
+							onClick={() => navigate(-1)}
+							className='w-full px-3 py-2 bg-indigo-600 hover:bg-indigo-700 transition-all duration-500 rounded-full text-white text-xs font-semibold leading-4'
+						>
 							{' '}
-							<button onClick={() => navigate(-1)}>Go Back</button>
+							<span>Go Back</span>
 						</button>
 					</div>
 				</div>

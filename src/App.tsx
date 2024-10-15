@@ -16,6 +16,9 @@ import Login from './pages/Login.tsx';
 import ProductOverview from './pages/productOverview.tsx';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import OrderOverview from './features/order/OrderOverview.tsx';
+import Dashboard from './pages/Dashboard.tsx';
+import Account from './features/dashboard/Account.tsx';
+import DashboardOverview from './features/dashboard/DashboardOverview.tsx';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -39,6 +42,15 @@ const router = createBrowserRouter([
 				children: [
 					{ path: '', element: <Menu /> },
 					{ path: '/menu/:id', element: <ProductOverview /> },
+				],
+			},
+			{
+				path: '/dashboard',
+				element: <Dashboard />,
+				children: [
+					{ path: 'account', element: <Account /> },
+					{ path: 'users', element: <Account /> },
+					{ path: 'dashboard', element: <DashboardOverview /> },
 				],
 			},
 			{

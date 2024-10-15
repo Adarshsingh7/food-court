@@ -1,75 +1,37 @@
-/** @format */
+import * as React from "react";
+import Box from "@mui/material/Box";
+import { Modal as MuiModal } from "@mui/material";
 
-import {
-	ReactNode,
-	cloneElement,
-	createContext,
-	useContext,
-	useState,
-} from 'react';
-import { HiXMark } from 'react-icons/hi2';
-import { Button } from '../ui/Button';
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)", // Centers the modal horizontally and vertically
+  bgcolor: "background.paper",
+  borderRadius: 2,
+  p: 4,
+  width: "inherit", // Inherit the width from the parent element
+};
 
-interface ModalContextType {
-	close: () => void;
-	openName: string;
-	open: (name: string) => void;
+export default function Modal({
+  open,
+  handleClose,
+  children,
+}: {
+  open: boolean;
+  handleClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="w-full">
+      <MuiModal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>{children}</Box>
+      </MuiModal>
+    </div>
+  );
 }
-
-const ModalContext = createContext<ModalContextType>({
-	close: () => {},
-	openName: '',
-	open: () => {},
-});
-
-interface WindowProps {
-	children: React.ReactElement;
-	name: string;
-}
-
-interface OpenProps {
-	children: React.ReactElement;
-	opens: string;
-}
-
-function Modal({ children }: { children: ReactNode }) {
-	const [openName, setOpenName] = useState('');
-
-	const open = (name: string) => setOpenName(name);
-	const close = () => setOpenName('');
-
-	return (
-		<ModalContext.Provider value={{ openName, open, close }}>
-			{children}
-		</ModalContext.Provider>
-	);
-}
-
-function Window({ children, name }: WindowProps) {
-	const { close, openName } = useContext(ModalContext);
-
-	if (name !== openName) return null;
-
-	return (
-		<div className='flex justify-center items-center'>
-			<div className='fixed top-1/2 left-1/2 bg-slate-100 -translate-x-1/2 md:w-[48rem] -translate-y-1/2 md:rounded-lg shadow-lg p-8 px-10 transition duration-500 w-screen h-screen md:h-[40rem] z-10'>
-				<div className='flex flex-row-reverse mb-4'>
-					<Button onClick={close}>
-						<HiXMark />
-					</Button>
-				</div>
-				{cloneElement(children, { onClose: close })}
-			</div>
-		</div>
-	);
-}
-
-function Open({ children, opens }: OpenProps) {
-	const { open } = useContext(ModalContext);
-	return cloneElement(children, { onClick: () => open(opens) });
-}
-
-Modal.Open = Open;
-Modal.Window = Window;
-
-export default Modal;

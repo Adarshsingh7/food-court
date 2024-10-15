@@ -14,7 +14,9 @@ class OrderService {
 				'Content-Type': 'application/json',
 			},
 		});
+		this.updateOrder = this.updateOrder.bind(this);
 		this.getOrder = this.getOrder.bind(this);
+		this.getAllOrders = this.getAllOrders.bind(this);
 	}
 
 	// Get all orders
@@ -22,7 +24,6 @@ class OrderService {
 		try {
 			const response: AxiosResponse<{ data: { data: Order[] } }> =
 				await this.api.get('/');
-			console.log(response.data.data.data);
 			return response.data.data.data;
 		} catch (error) {
 			console.error('Error fetching orders:', error);

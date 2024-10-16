@@ -57,6 +57,7 @@ function DashboardOverview() {
 				<FeaturedTable
 					data={filterOrders(data)}
 					fields={[
+						'OrderID',
 						'paymentStatus',
 						'recipientEmail',
 						'recipientName',
@@ -95,12 +96,12 @@ function EditOrderModal({ order }: { order: Order | null }) {
 }
 
 function OrderDetails({ order }: { order: Order }) {
-	const [paymentStatus, setPaymentStatus] = useState<
-		'pending' | 'paid' | 'failed'
-	>(order.paymentStatus);
-	const [orderStatus, setOrderStatus] = useState<
-		'new' | 'preparing' | 'completed' | 'cancelled'
-	>(order.status);
+	type orderStatusType = 'new' | 'preparing' | 'completed' | 'cancelled';
+	type paymentStatusType = 'pending' | 'paid' | 'failed';
+	const [paymentStatus, setPaymentStatus] = useState<paymentStatusType>(
+		order.paymentStatus
+	);
+	const [orderStatus, setOrderStatus] = useState<orderStatusType>(order.status);
 
 	const { updateOrder } = useUpdateOrder();
 
@@ -108,8 +109,8 @@ function OrderDetails({ order }: { order: Order }) {
 		orderStatus,
 		paymentStatus,
 	}: {
-		orderStatus: 'new' | 'preparing' | 'completed' | 'cancelled';
-		paymentStatus: 'pending' | 'paid' | 'failed';
+		orderStatus: orderStatusType;
+		paymentStatus: paymentStatusType;
 	}) => {
 		updateOrder({
 			id: order._id,
@@ -151,7 +152,7 @@ function OrderDetails({ order }: { order: Order }) {
 							<DropdownMenu
 								element={['pending', 'paid', 'failed']}
 								onSelect={(val) => {
-									const typedVal = val as 'pending' | 'paid' | 'failed';
+									const typedVal = val as paymentStatusType;
 									setPaymentStatus(typedVal);
 									handleUpdateOrderStatus({
 										orderStatus,
@@ -166,11 +167,7 @@ function OrderDetails({ order }: { order: Order }) {
 							<DropdownMenu
 								element={['new', 'preparing', 'completed', 'cancelled']}
 								onSelect={(val) => {
-									const typedVal = val as
-										| 'new'
-										| 'preparing'
-										| 'completed'
-										| 'cancelled';
+									const typedVal = val as orderStatusType;
 									setOrderStatus(typedVal);
 									handleUpdateOrderStatus({
 										orderStatus: typedVal,

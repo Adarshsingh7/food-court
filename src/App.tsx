@@ -19,6 +19,7 @@ import OrderOverview from './features/order/OrderOverview.tsx';
 import Dashboard from './pages/Dashboard.tsx';
 import Account from './features/dashboard/Account.tsx';
 import DashboardOverview from './features/dashboard/DashboardOverview.tsx';
+import MenuControl from './features/dashboard/MenuControl.tsx';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
 					{ path: 'account', element: <Account /> },
 					{ path: 'users', element: <Account /> },
 					{ path: 'dashboard', element: <DashboardOverview /> },
+					{ path: 'menu', element: <MenuControl /> },
 				],
 			},
 			{

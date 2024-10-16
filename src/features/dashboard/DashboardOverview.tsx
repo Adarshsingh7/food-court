@@ -11,11 +11,11 @@ import { useState } from 'react';
 import DropdownMenu from '../../components/DropdownMenu';
 import { useOrderProducts } from '../../hooks/useOrderProducts';
 import { MenuItem } from '../../types/menuType';
-import { Button } from '@mui/material';
 import { useUpdateOrder } from './useUpdateOrder';
 
 function filterOrders(data: Order[]) {
 	return data.map((order) => ({
+		id: order._id,
 		payment: order.paymentStatus,
 		email: order.recipientEmail,
 		name: order.recipientName,
@@ -90,32 +90,35 @@ function EditOrderModal({ order }: { order: Order | null }) {
 				</div>
 			</div>
 			<OrderDetails order={order} />
-			<div className='flex gap-5'>
-				<Button
-					variant='contained'
-					color='primary'
-				>
-					Save
-				</Button>
-				<Button
-					variant='contained'
-					color='error'
-				>
-					cancel
-				</Button>
-			</div>
 		</div>
 	);
 }
 
 function OrderDetails({ order }: { order: Order }) {
-	const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus);
-	const [orderStatus, setOrderStatus] = useState(order.status);
+	const [paymentStatus, setPaymentStatus] = useState<
+		'pending' | 'paid' | 'failed'
+	>(order.paymentStatus);
+	const [orderStatus, setOrderStatus] = useState<
+		'new' | 'preparing' | 'completed' | 'cancelled'
+	>(order.status);
 
-	const { updateOrder } = useUpdateOrder(order._id, {
-		status: orderStatus,
+	const { updateOrder } = useUpdateOrder();
+
+	const handleUpdateOrderStatus = ({
+		orderStatus,
 		paymentStatus,
-	});
+	}: {
+		orderStatus: 'new' | 'preparing' | 'completed' | 'cancelled';
+		paymentStatus: 'pending' | 'paid' | 'failed';
+	}) => {
+		updateOrder({
+			id: order._id,
+			body: {
+				status: orderStatus,
+				paymentStatus,
+			},
+		});
+	};
 
 	if (!order) return null;
 
@@ -147,7 +150,14 @@ function OrderDetails({ order }: { order: Order }) {
 							<h1 className='text-lg font-bold'>Payment Status</h1>
 							<DropdownMenu
 								element={['pending', 'paid', 'failed']}
-								onSelect={(val) => setPaymentStatus(val)}
+								onSelect={(val) => {
+									const typedVal = val as 'pending' | 'paid' | 'failed';
+									setPaymentStatus(typedVal);
+									handleUpdateOrderStatus({
+										orderStatus,
+										paymentStatus: typedVal,
+									});
+								}}
 								selected={paymentStatus}
 							/>
 						</div>
@@ -155,7 +165,18 @@ function OrderDetails({ order }: { order: Order }) {
 							<h1 className='text-lg font-bold'>Order Status</h1>
 							<DropdownMenu
 								element={['new', 'preparing', 'completed', 'cancelled']}
-								onSelect={(val) => setOrderStatus(val)}
+								onSelect={(val) => {
+									const typedVal = val as
+										| 'new'
+										| 'preparing'
+										| 'completed'
+										| 'cancelled';
+									setOrderStatus(typedVal);
+									handleUpdateOrderStatus({
+										orderStatus: typedVal,
+										paymentStatus,
+									});
+								}}
 								selected={orderStatus}
 							/>
 						</div>

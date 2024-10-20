@@ -14,7 +14,6 @@ import {
   FunnelIcon,
   MinusIcon,
   PlusIcon,
-  Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
@@ -261,7 +260,7 @@ const FilterSection: FC<FilterSectionProps> = function ({ section }) {
 };
 
 // SortMenu Component
-function SortMenu() {
+export function SortMenu() {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>

@@ -307,6 +307,7 @@ function ProductGrid() {
   const location = useLocation();
   const queryParam = new URLSearchParams(location.search);
   const categories = queryParam.getAll("category");
+  const search = queryParam.get("search");
 
   const { data, error, isLoading } = useQuery<MenuItem[]>({
     queryKey: ["menuItem"],
@@ -316,9 +317,16 @@ function ProductGrid() {
   if (error instanceof Error) return <div>Error: {error.message}</div>;
   if (!data) return <div>No data found</div>;
 
-  const filteredData = categories.length
-    ? data.filter((product) => categories.includes(product.category))
-    : data;
+  const filteredData = data.filter((product) => {
+    const matchesCategory = categories.length
+      ? categories.includes(product.category)
+      : true;
+    const matchesSearch = search
+      ? product.name.toLowerCase().includes(search.toLowerCase()) ||
+        product.description.toLowerCase().includes(search.toLowerCase())
+      : true;
+    return matchesCategory && matchesSearch;
+  });
 
   if (!filteredData.length) return <NoData />;
 
@@ -332,6 +340,23 @@ function ProductGrid() {
 }
 
 function Search() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams();
+    if (searchTerm) {
+      searchParams.set("search", searchTerm);
+    } else {
+      searchParams.delete("search");
+    }
+    navigate(`?${searchParams.toString()}`);
+  }, [searchTerm, navigate]);
+
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="relative flex items-center w-full h-12 rounded-lg shadow-md focus-within:shadow-lg bg-white overflow-hidden">
@@ -358,6 +383,8 @@ function Search() {
           autoComplete="off"
           id="search"
           placeholder="Search something.."
+          value={searchTerm}
+          onChange={handleSearchChange}
         />
       </div>
     </div>

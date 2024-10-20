@@ -111,8 +111,8 @@ function OrderDetails({
     orderStatus,
     paymentStatus,
   }: {
-    orderStatus: orderStatusType;
-    paymentStatus: paymentStatusType;
+    orderStatus: "new" | "preparing" | "completed" | "cancelled";
+    paymentStatus: "pending" | "paid" | "failed";
   }) => {
     updateOrder({
       id: order._id,
@@ -162,7 +162,10 @@ function OrderDetails({
                 onChange={(e) =>
                   handleUpdateOrderStatus({
                     orderStatus: order.status,
-                    paymentStatus: e.target.value,
+                    paymentStatus: e.target.value as
+                      | "pending"
+                      | "paid"
+                      | "failed",
                   })
                 }
               >
@@ -180,7 +183,11 @@ function OrderDetails({
                 value={order.status}
                 onChange={(e) =>
                   handleUpdateOrderStatus({
-                    orderStatus: e.target.value,
+                    orderStatus: e.target.value as
+                      | "new"
+                      | "preparing"
+                      | "completed"
+                      | "cancelled",
                     paymentStatus: order.paymentStatus,
                   })
                 }

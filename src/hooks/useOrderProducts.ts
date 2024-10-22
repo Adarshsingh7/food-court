@@ -16,7 +16,6 @@ const useOrderProducts = (
     if (matchedProduct) return true;
     else return false;
   });
-  console.log({ matchedOrder, products });
   return { products };
 };
 

@@ -1,15 +1,15 @@
 /** @format */
 
 import { FC, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import NoData from "../../ui/NoData";
 import { CartItemType } from "../../types/cartType";
 import QuantityButton from "../../components/QuantityButtons";
 import { order } from "./order";
-import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { emptyCart } from "../../slice/cartSlice";
+import { useCreateOrder } from "./useCreateOrder";
+import BackdropLoader from "../../components/BackdropLoader";
 
 interface ReciptType {
   name: string;
@@ -135,12 +135,11 @@ const RecipientDetails: FC<{
   amount: number;
 }> = ({ items, amount }) => {
   const { register, handleSubmit } = useForm<ReciptType>();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+
+  const { orderItem, ordering } = useCreateOrder();
 
   async function submitForm(data: ReciptType) {
-    console.log(data);
-    const response = await order.createOrder({
+    orderItem({
       totalAmount: amount,
       status: "new",
       paymentStatus: "pending",
@@ -154,11 +153,9 @@ const RecipientDetails: FC<{
       recipientEmail: data.email,
       recipientPhoneNumber: data.contact,
     });
-    if (response) {
-      dispatch(emptyCart());
-      navigate(`/order/${response._id}`);
-    }
   }
+
+  if (ordering) return <BackdropLoader />;
 
   return (
     <div className="p-4 mx-auto max-w-xl bg-white font-[sans-serif]">

@@ -20,6 +20,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Account from "./features/dashboard/Account.tsx";
 import DashboardOverview from "./features/dashboard/DashboardOverview.tsx";
 import MenuControl from "./features/dashboard/MenuControl.tsx";
+import OrderHistory from "./pages/OrderHistory.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: "/order",
         element: <OrderDetails />,
+      },
+      {
+        path: "/history",
+        element: <OrderHistory />,
       },
       {
         path: "/order/:id",

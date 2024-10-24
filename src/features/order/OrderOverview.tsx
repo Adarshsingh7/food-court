@@ -18,7 +18,7 @@ import { MenuItem } from "../../types/menuType";
 function OrderOverview() {
   const { id } = useParams();
   const { isLoading, data, error } = useQuery<Order>({
-    queryKey: ["orders"],
+    queryKey: ["order"],
     queryFn: () => order.getOrder(id || "0"),
   });
   if (isLoading) return <BackdropLoader />;
@@ -27,7 +27,7 @@ function OrderOverview() {
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-          Take screenshot or save order id #{data._id}
+          Take screenshot or save order id #{data._id.slice(-10)}
         </h2>
         <div className="mt-6 sm:mt-8 lg:flex lg:gap-8">
           <div className="w-full divide-y divide-gray-200 overflow-hidden rounded-lg border border-gray-200 dark:divide-gray-700 dark:border-gray-700 lg:max-w-xl xl:max-w-2xl">
@@ -148,7 +148,7 @@ const OrderHistory: FC<{ order: Order }> = ({ order }) => {
       Icon: HiCheckBadge,
       title: "Order Accepted",
       description: "order accepted please wait patiently",
-      completed: order.status === "preparing",
+      completed: order.status === "preparing" || order.status === "completed",
     },
     {
       Icon: HiCheckBadge,
@@ -157,7 +157,7 @@ const OrderHistory: FC<{ order: Order }> = ({ order }) => {
         preprationTime +
         preprationTime * 0.2
       ).toFixed(0)} minutes after accepted`,
-      completed: order.status === "preparing",
+      completed: order.status === "preparing" || order.status === "completed",
     },
     {
       Icon: HiCake,

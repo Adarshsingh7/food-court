@@ -37,7 +37,6 @@ class OrderService {
     try {
       const response: AxiosResponse<{ data: { data: Order } }> =
         await this.api.get(`/${id}`);
-      console.log({ response });
       return response.data.data.data;
     } catch (error) {
       console.error(`Error fetching order with id ${id}:`, error);

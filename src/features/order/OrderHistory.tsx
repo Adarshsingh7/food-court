@@ -5,7 +5,10 @@ import BackdropLoader from "../../components/BackdropLoader";
 import { order } from "../order/order";
 import ErrorPage from "../../pages/ErrorPage";
 import NoData from "../../ui/NoData";
-import { getAllLocalEntries } from "../../utils/manageLocalEntry";
+import {
+  appendLocalEntry,
+  getAllLocalEntries,
+} from "../../utils/manageLocalEntry";
 import { Order } from "../../types/orderType";
 import { formatDate } from "../../utils/dateManager";
 import toast from "react-hot-toast";
@@ -92,9 +95,25 @@ export default function History() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [orderStatus, setOrderStatus] = useState<string>("");
   const [history, setHistory] = useState(1);
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["orders"],
     queryFn: order.getAllOrders,
+  });
+
+  const { mutate: duplicateOrder } = useMutation({
+    mutationFn: (currentOrder: Order) =>
+      order.createOrder({
+        ...currentOrder,
+        _id: undefined,
+        status: "new",
+        paymentStatus: "pending",
+        createdAt: undefined,
+      }),
+    onSuccess: (data) => {
+      appendLocalEntry(data._id);
+      toast.success("Order duplicated successfully");
+      refetch();
+    },
   });
 
   useEffect(() => {
@@ -106,20 +125,6 @@ export default function History() {
       setOrders(filteredOrders);
     }
   }, [data, history, orderStatus]);
-  const { mutate: duplicateOrder } = useMutation({
-    mutationFn: (currentOrder: Order) =>
-      order.createOrder({
-        ...currentOrder,
-        _id: undefined,
-        status: "new",
-        paymentStatus: "pending",
-        createdAt: undefined,
-      }),
-    onSuccess: () => {
-      console.log("Order duplicated successfully");
-      toast.success("Order duplicated successfully");
-    },
-  });
 
   if (isLoading) return <BackdropLoader />;
   if (error) return <ErrorPage message="An error occurred. Please try again" />;

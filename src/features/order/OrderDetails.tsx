@@ -22,7 +22,7 @@ const CartItem: FC<{ item: CartItemType }> = ({ item }) => {
 
   return (
     <div
-      key={product.itemId}
+      key={product._id}
       className="grid grid-cols-1 lg:grid-cols-2 gap-6 border-t border-gray-200 py-6"
     >
       <div className="flex items-center flex-col md:flex-row gap-6 w-full">
@@ -113,7 +113,7 @@ const ShoppingCart: FC = () => {
 
         {/* Cart Items */}
         {cartItems.map((item) => (
-          <CartItem item={item} />
+          <CartItem item={item} key={item.itemId} />
         ))}
 
         {/* Summary Section */}

@@ -41,6 +41,14 @@ function DashboardOverview() {
   if (!data?.length) return <NoData />;
   if (error) return <div>Error: {error.message}</div>;
 
+  const processingOrders = data.filter(
+    (order) => order.status === "new" || order.status === "preparing",
+  );
+
+  const processedOrders = data.filter(
+    (order) => order.status === "completed" || order.status === "cancelled",
+  );
+
   return (
     <div>
       <Modal open={editModalOpen} handleClose={() => setEditModalOpen(false)}>
@@ -49,22 +57,51 @@ function DashboardOverview() {
           onClose={() => setEditModalOpen(false)}
         />
       </Modal>
-      <h1 className="text-3xl font-bold mb-5">Orders</h1>
-      <div>
-        <FeaturedTable
-          data={filterOrders(data)}
-          fields={[
-            "OrderID",
-            "paymentStatus",
-            "recipientEmail",
-            "recipientName",
-            "recipientPhoneNumber",
-            "status",
-            "totalAmount",
-            "Actions",
-          ]}
-          action={(item) => openOrderOverview(item)}
-        />
+      <div className="my-10">
+        <h1 className="text-3xl font-bold mb-5">Processing Orders</h1>
+        <div>
+          {processingOrders.length ? (
+            <FeaturedTable
+              data={filterOrders(processingOrders)}
+              fields={[
+                "OrderID",
+                "paymentStatus",
+                "recipientEmail",
+                "recipientName",
+                "recipientPhoneNumber",
+                "status",
+                "totalAmount",
+                "Actions",
+              ]}
+              action={(item) => openOrderOverview(item)}
+            />
+          ) : (
+            <NoData />
+          )}
+        </div>
+      </div>
+      <div className="my-10">
+        <h1 className="text-3xl font-bold mb-5">Processed Orders</h1>
+        <div>
+          {processedOrders.length ? (
+            <FeaturedTable
+              data={filterOrders(processedOrders)}
+              fields={[
+                "OrderID",
+                "paymentStatus",
+                "recipientEmail",
+                "recipientName",
+                "recipientPhoneNumber",
+                "status",
+                "totalAmount",
+                "Actions",
+              ]}
+              action={(item) => openOrderOverview(item)}
+            />
+          ) : (
+            <NoData />
+          )}
+        </div>
       </div>
     </div>
   );

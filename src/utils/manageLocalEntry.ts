@@ -20,7 +20,6 @@ function appendLocalEntry(id: string): void {
 }
 
 function getAllLocalEntries(history: number = 7): string[] {
-  console.log(history);
   const storageKey = "ids";
   const oneDayInMillis = 24 * 60 * 60 * 1000;
   const now = Date.now();

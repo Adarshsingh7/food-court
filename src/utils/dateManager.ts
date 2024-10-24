@@ -33,8 +33,4 @@ function parseDate(dateString: string, format: string): Date {
   return new Date(year, month - 1, day);
 }
 
-function getCurrentFormattedDate(format: string): string {
-  return formatDate(new Date(), format);
-}
-
-export { formatDate, parseDate, getCurrentFormattedDate };
+export { formatDate, parseDate };

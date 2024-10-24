@@ -20,7 +20,7 @@ import Dashboard from "./pages/Dashboard.tsx";
 import Account from "./features/dashboard/Account.tsx";
 import DashboardOverview from "./features/dashboard/DashboardOverview.tsx";
 import MenuControl from "./features/dashboard/MenuControl.tsx";
-import OrderHistory from "./pages/OrderHistory.tsx";
+import OrderHistory from "./features/order/OrderHistory.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {

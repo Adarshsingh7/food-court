@@ -149,7 +149,7 @@ const navigation = {
     { name: "Contact", href: "#", role: ["admin", "user"] },
     { name: "Menu", href: "/menu", role: ["admin", "user"] },
     { name: "Events", href: "#", role: ["admin", "user"] },
-    { name: "Ordres", href: "/allorders", role: ["admin"] },
+    { name: "Ordres", href: "/history", role: ["admin"] },
   ],
 };
 

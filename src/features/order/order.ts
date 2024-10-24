@@ -17,6 +17,7 @@ class OrderService {
     this.updateOrder = this.updateOrder.bind(this);
     this.getOrder = this.getOrder.bind(this);
     this.getAllOrders = this.getAllOrders.bind(this);
+    this.deleteOrder = this.deleteOrder.bind(this);
   }
 
   // Get all orders

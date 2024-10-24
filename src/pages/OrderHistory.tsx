@@ -1,15 +1,32 @@
-import React, { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import BackdropLoader from "../components/BackdropLoader";
+import { order } from "../features/order/order";
+import ErrorPage from "./ErrorPage";
+import NoData from "../ui/NoData";
+import { getAllLocalEntries } from "../utils/manageLocalEntry";
+import { Order } from "../types/orderType";
+import { formatDate } from "../utils/dateManager";
+import { createContext, useContext, useEffect, useState } from "react";
+
+interface HistoryContextInterface {
+  orders: Order[];
+  setOrders: React.Dispatch<React.SetStateAction<Order[]>>;
+  date: string;
+  history: number;
+  status: string;
+}
 
 // Define types for props
 interface SelectProps {
   label: string;
+  onSelect?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   id: string;
-  options: { value: string; label: string }[];
+  options: { value: string | number; label: string }[];
 }
 
 interface OrderDetailProps {
   label: string;
-  value: string;
+  value: number | string;
   link?: string;
 }
 
@@ -20,27 +37,44 @@ interface ButtonProps {
   href?: string;
 }
 
-// Reusable Select component
-const Select: React.FC<SelectProps> = ({ label, id, options }) => (
-  <div>
-    <label
-      htmlFor={id}
-      className="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-    >
-      {label}
-    </label>
-    <select
-      id={id}
-      className="block w-full min-w-[8rem] rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
-    >
-      {options.map((option, index) => (
-        <option key={index} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
-  </div>
+const OrderHistoryContext = createContext<HistoryContextInterface | undefined>(
+  undefined,
 );
+
+const useOrderHistory = () => {
+  const context = useContext(OrderHistoryContext);
+  if (!context) {
+    throw new Error(
+      "useOrderHistory must be used within an OrderHistoryProvider",
+    );
+  }
+  return context;
+};
+
+// Reusable Select component
+const Select: React.FC<SelectProps> = ({ label, id, options, onSelect }) => {
+  return (
+    <div>
+      <label
+        htmlFor={id}
+        className="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+      >
+        {label}
+      </label>
+      <select
+        id={id}
+        className="block w-full min-w-[8rem] rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+        onChange={onSelect}
+      >
+        {options.map((option, index) => (
+          <option key={index} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+};
 
 // Reusable OrderDetail component
 const OrderDetail: React.FC<OrderDetailProps> = ({ label, value, link }) => (
@@ -78,99 +112,106 @@ const Button: React.FC<ButtonProps> = ({
   );
 
 export default function History() {
-  const [orders, setOrders] = useState<any[]>([
-    {
-      id: "12345",
-      date: "2023-01-01",
-      price: "$100.00",
-      status: "Confirmed",
-    },
-    {
-      id: "67890",
-      date: "2023-02-15",
-      price: "$200.00",
-      status: "In transit",
-    },
-    {
-      id: "54321",
-      date: "2023-03-10",
-      price: "$150.00",
-      status: "Cancelled",
-    },
-  ]);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [orderStatus, setOrderStatus] = useState<string>("");
+  const [history, setHistory] = useState(1);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["orders"],
+    queryFn: order.getAllOrders,
+  });
 
   useEffect(() => {
-    // Fetch data from API
-    fetch("/api/orders")
-      .then((response) => response.json())
-      .then((data) => setOrders(data));
-  }, []);
+    if (data) {
+      const prevOrders = getAllLocalEntries(history);
+      const filteredOrders = data
+        .filter((o) => prevOrders.includes(o._id))
+        .filter((o) => (orderStatus ? o.status === orderStatus : true));
+      setOrders(filteredOrders);
+    }
+  }, [data, history, orderStatus]);
+
+  if (isLoading) return <BackdropLoader />;
+  if (error) return <ErrorPage message="An error occurred. Please try again" />;
 
   return (
-    <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
-      <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-        <div className="mx-auto max-w-5xl">
-          <div className="gap-4 sm:flex sm:items-center sm:justify-between">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
-              My orders
-            </h2>
-            <div className="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
-              <Select
-                label="Select order type"
-                id="order-type"
-                options={[
-                  { value: "", label: "All orders" },
-                  { value: "pre-order", label: "Pre-order" },
-                  { value: "transit", label: "In transit" },
-                  { value: "confirmed", label: "Confirmed" },
-                  { value: "cancelled", label: "Cancelled" },
-                ]}
-              />
-              <span className="inline-block text-gray-500 dark:text-gray-400">
-                {" "}
-                from{" "}
-              </span>
-              <Select
-                label="Select duration"
-                id="duration"
-                options={[
-                  { value: "", label: "this week" },
-                  { value: "this month", label: "this month" },
-                  { value: "last 3 months", label: "the last 3 months" },
-                  { value: "last 6 months", label: "the last 6 months" },
-                  { value: "this year", label: "this year" },
-                ]}
-              />
+    <OrderHistoryContext.Provider
+      value={{ orders, setOrders, date: "", history, status: orderStatus }}
+    >
+      <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+        <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+          <div className="mx-auto max-w-5xl">
+            <div className="gap-4 sm:flex sm:items-center sm:justify-between">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
+                My orders
+              </h2>
+              <div className="mt-6 gap-4 space-y-4 sm:mt-0 sm:flex sm:items-center sm:justify-end sm:space-y-0">
+                <Select
+                  label="Select order type"
+                  id="order-type"
+                  onSelect={(e) => setOrderStatus(e.target.value)}
+                  options={[
+                    { value: "", label: "All orders" },
+                    { value: "new", label: "New orders" },
+                    { value: "preparing", label: "Preparing Orders" },
+                    { value: "completed", label: "Completed Orders" },
+                    { value: "cancelled", label: "Cancelled Orders" },
+                  ]}
+                />
+                <span className="inline-block text-gray-500 dark:text-gray-400">
+                  {" "}
+                  from{" "}
+                </span>
+                <Select
+                  label="Select duration"
+                  id="duration"
+                  onSelect={(e) => setHistory(+e.target.value)}
+                  options={[
+                    { value: 1, label: "today" },
+                    { value: 2, label: "last 2 days" },
+                    { value: 3, label: "last 3 days" },
+                    { value: 4, label: "last 4 days" },
+                    { value: 7, label: "this week" },
+                  ]}
+                />
+              </div>
             </div>
-          </div>
-          <div className="mt-6 flow-root sm:mt-8">
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {orders.map((order, index) => (
-                <div
-                  key={index}
-                  className="flex flex-wrap items-center gap-y-4 py-6"
-                >
-                  <OrderDetail label="Order ID" value={order.id} link="#" />
-                  <OrderDetail label="Date" value={order.date} />
-                  <OrderDetail label="Price" value={order.price} />
-                  <OrderDetail label="Status" value={order.status} />
-                  <div className="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
-                    <Button
-                      label="Order again"
-                      className="w-full rounded-lg bg-primary-700 px-3 py-2 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 lg:w-auto"
+            <div className="mt-6 flow-root sm:mt-8">
+              <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                {!orders.length && <NoData message="No orders found" />}
+                {orders.map((order, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-wrap items-center gap-y-4 py-6"
+                  >
+                    <OrderDetail
+                      label="Order ID"
+                      value={order._id.slice(-8)}
+                      link="#"
                     />
-                    <Button
-                      label="View details"
-                      href="#"
-                      className="w-full inline-flex justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 lg:w-auto"
+                    <OrderDetail
+                      label="Date"
+                      value={formatDate(order.createdAt)}
                     />
+                    <OrderDetail label="Price" value={order.totalAmount + ""} />
+                    <OrderDetail label="Status" value={order.status} />
+                    <div className="w-full grid sm:grid-cols-2 lg:flex lg:w-64 lg:items-center lg:justify-end gap-4">
+                      <Button
+                        label="Order again"
+                        className="w-full rounded-lg bg-primary-700 px-3 py-2 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 lg:w-auto"
+                      />
+                      <Button
+                        label="View details"
+                        href="#"
+                        className="w-full inline-flex justify-center rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 lg:w-auto"
+                      />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </OrderHistoryContext.Provider>
   );
 }

@@ -1,5 +1,7 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { sendReservationEmail } from "../utils/sendEmail";
+import toast from "react-hot-toast";
 
 type FormValues = {
   eventDate: string;
@@ -16,10 +18,23 @@ const Event: FC = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormValues>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log(data);
+    setIsSubmitting(true);
+    sendReservationEmail(data).then((data) => {
+      if (data.status === "success") {
+        toast.success(
+          "Your reservation request sent successfully, we will contact you soon!",
+        );
+        reset();
+      } else {
+        toast.error("Something went wrong. Please try again later.");
+      }
+      setIsSubmitting(false);
+    });
   };
 
   return (
@@ -48,6 +63,7 @@ const Event: FC = () => {
               <input
                 type="date"
                 className="mt-2 w-full p-2 rounded-md border text-neutral-950"
+                autoComplete="new-password"
                 {...register("eventDate", {
                   required: "Event date is required",
                 })}
@@ -66,6 +82,7 @@ const Event: FC = () => {
                 type="number"
                 min="1"
                 className="mt-2 w-full p-2 rounded-md border text-neutral-950"
+                autoComplete="new-password"
                 {...register("guests", {
                   required: "Number of guests is required",
                 })}
@@ -82,6 +99,7 @@ const Event: FC = () => {
               <p className="text-neutral-700">Choose time slot</p>
               <select
                 className="mt-2 w-full p-2 rounded-md border text-neutral-950"
+                autoComplete="new-password"
                 {...register("time", { required: "Time is required" })}
               >
                 <option value="12:00 PM">12:00 PM</option>
@@ -101,6 +119,7 @@ const Event: FC = () => {
               <input
                 type="text"
                 className="mt-2 w-full p-2 rounded-md border text-neutral-950"
+                autoComplete="new-password"
                 {...register("name", {
                   required: "Name is required",
                   minLength: {
@@ -120,6 +139,7 @@ const Event: FC = () => {
               <input
                 type="email"
                 className="mt-2 w-full p-2 rounded-md border text-neutral-950"
+                autoComplete="new-password"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -143,6 +163,7 @@ const Event: FC = () => {
               <input
                 type="tel"
                 className="mt-2 w-full p-2 rounded-md border text-neutral-950"
+                autoComplete="new-password"
                 {...register("contactNumber", {
                   required: "Contact number is required",
                   minLength: {
@@ -179,6 +200,7 @@ const Event: FC = () => {
               <textarea
                 className="mt-2 w-full p-2 rounded-md text-neutral-950"
                 placeholder="A detailed description of the event, menu, and more information for your guests to enjoy the exclusive experience."
+                autoComplete="new-password"
                 {...register("eventDetails", {
                   required: "Event details are required",
                   minLength: {
@@ -197,7 +219,8 @@ const Event: FC = () => {
 
             <button
               type="submit"
-              className="bg-primary-500 text-primary-50 px-6 py-2 mt-4 rounded-md"
+              className={`px-6 py-2 mt-4 rounded-md ${isSubmitting ? "bg-zinc-700 text-white" : "bg-primary-500 text-primary-50"}`}
+              disabled={isSubmitting}
             >
               Confirm Reservation
             </button>

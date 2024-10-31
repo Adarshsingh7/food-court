@@ -1,6 +1,6 @@
 /** @format */
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./AppLayout";
@@ -24,6 +24,7 @@ import OrderHistory from "./features/order/OrderHistory.tsx";
 import Protected from "./components/Protected.tsx";
 import Contact from "./pages/Contact.tsx";
 import Event from "./pages/Event.tsx";
+import { sendEmail } from "./utils/sendEmail.ts";
 
 const queryClient = new QueryClient({
   defaultOptions: {

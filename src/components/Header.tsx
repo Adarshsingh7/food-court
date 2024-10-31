@@ -1,7 +1,3 @@
-/** @format */
-
-"use client";
-
 import { useState } from "react";
 import {
   Dialog,
@@ -147,7 +143,7 @@ const navigation = {
     { name: "Home", href: "/", role: ["admin", "user"] },
     { name: "Contact", href: "/contact", role: ["admin", "user"] },
     { name: "Menu", href: "/menu", role: ["admin", "user"] },
-    { name: "Events", href: "#", role: ["admin", "user"] },
+    { name: "Events", href: "/event", role: ["admin", "user"] },
     { name: "Ordres", href: "/history", role: ["admin"] },
   ],
 };
@@ -195,6 +191,7 @@ export default function NavBar() {
                   <Link
                     to={page.href}
                     className="-m-2  p-2 font-medium text-gray-900 block"
+                    onClick={() => setOpen(false)}
                   >
                     {page.name}
                   </Link>

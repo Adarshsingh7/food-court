@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, FormEvent } from "react";
 import { toast } from "react-hot-toast";
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { sendEmail } from "../utils/sendEmail";
 
 interface FormData {
   name: string;
@@ -24,8 +25,17 @@ export default function Contact() {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    toast.success("Message sent successfully!");
+    sendEmail(formData)
+      .then((data) => {
+        if (data.status === "success") {
+          toast.success("Message sent successfully!");
+        } else {
+          toast.error("Message failed to send. Please try again.");
+        }
+      })
+      .catch(() => {
+        toast.error("An error occurred. Please try again.");
+      });
     setFormData({ name: "", email: "", message: "" });
   };
 

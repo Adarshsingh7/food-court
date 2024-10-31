@@ -21,6 +21,9 @@ import Account from "./features/dashboard/Account.tsx";
 import DashboardOverview from "./features/dashboard/DashboardOverview.tsx";
 import MenuControl from "./features/dashboard/MenuControl.tsx";
 import OrderHistory from "./features/order/OrderHistory.tsx";
+import Protected from "./components/Protected.tsx";
+import Contact from "./pages/Contact.tsx";
+import Event from "./pages/Event.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,7 +51,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        element: (
+          <Protected>
+            <Dashboard />
+          </Protected>
+        ),
         children: [
           { path: "account", element: <Account /> },
           { path: "users", element: <Account /> },
@@ -83,6 +90,14 @@ const router = createBrowserRouter([
       {
         path: "/history",
         element: <OrderHistory />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/event",
+        element: <Event />,
       },
       {
         path: "/order/:id",

@@ -31,7 +31,9 @@ class Auth {
   login = async (data: { email: string; password: string }) => {
     try {
       const response = await this.api.post("/login", data);
-      return response.data.user;
+      console.log(response.data);
+      if (response.status === 200) this.setToken(response.data.token);
+      return response.data.data.user;
     } catch (error) {
       console.error(error);
       throw error;
@@ -52,8 +54,10 @@ class Auth {
     }
   };
 
-  isAuthenticated = async (): Promise<User> => {
-    const currentUser = await this.api.get<{ user: User }>("/me");
+  isAuthenticated = async () => {
+    const currentUser = await this.api.get("/me", {
+      headers: { Authorization: `Bearer ${this.getToken()}` },
+    });
     return currentUser.data.user;
   };
 

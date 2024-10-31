@@ -17,7 +17,6 @@ import {
 } from "@heroicons/react/24/outline";
 import Cart from "./Cart.tsx";
 import { Link } from "react-router-dom";
-import { FAKE_USER } from "./AuthRoute.tsx";
 import { useSelector } from "react-redux";
 import { RootState } from "../store.ts";
 
@@ -146,7 +145,7 @@ const navigation = {
   ],
   pages: [
     { name: "Home", href: "/", role: ["admin", "user"] },
-    { name: "Contact", href: "#", role: ["admin", "user"] },
+    { name: "Contact", href: "/contact", role: ["admin", "user"] },
     { name: "Menu", href: "/menu", role: ["admin", "user"] },
     { name: "Events", href: "#", role: ["admin", "user"] },
     { name: "Ordres", href: "/history", role: ["admin"] },
@@ -248,9 +247,7 @@ export default function NavBar() {
                     <Link
                       key={page.name}
                       to={page.href}
-                      className={`items-center text-sm font-medium text-gray-700 hover:text-gray-800 ${
-                        page.role.includes(FAKE_USER.role) ? "flex" : "hidden"
-                      }`}
+                      className={`items-center text-sm font-medium text-gray-700 hover:text-gray-800 flex`}
                     >
                       {page.name}
                     </Link>

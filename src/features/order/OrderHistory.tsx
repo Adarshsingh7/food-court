@@ -130,7 +130,7 @@ export default function History() {
   if (error) return <ErrorPage message="An error occurred. Please try again" />;
 
   return (
-    <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+    <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16 min-h-screen">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div className="mx-auto max-w-5xl">
           <div className="gap-4 sm:flex sm:items-center sm:justify-between">

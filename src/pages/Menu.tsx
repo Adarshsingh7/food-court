@@ -173,7 +173,14 @@ const CategoryList: FC<CategoryListProps> = ({ categories }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const searchParams = new URLSearchParams();
+    const searchParams = new URLSearchParams(window.location.search);
+    const initialCategories = searchParams.getAll("category");
+    setSelectedCategories(initialCategories);
+  }, []);
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.delete("category");
     selectedCategories.forEach((category) => {
       searchParams.append("category", category);
     });

@@ -99,10 +99,15 @@ const ShoppingCart: FC = () => {
     order.getAllOrders();
   }, []);
 
-  if (!cartItems.length) return <NoData />;
+  if (!cartItems.length)
+    return (
+      <div className="min-h-screen">
+        <NoData />
+      </div>
+    );
 
   return (
-    <section className="py-24 relative">
+    <section className="py-24 relative min-h-screen">
       <div className="w-full max-w-7xl px-4 md:px-5 lg:px-6 mx-auto">
         <h2 className="font-manrope font-bold text-4xl leading-10 mb-8 text-center text-black">
           Food Plate

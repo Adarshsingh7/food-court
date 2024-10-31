@@ -2,7 +2,9 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { MenuItem } from "../../types/menuType";
 
 export const fetchMenuItems = async () => {
-  const data = await axios.get("http://localhost:3000/api/v1/menus");
+  const data = await axios.get(
+    "https://oyster-app-s59tr.ondigitalocean.app/api/v1/menus",
+  );
 
   return data?.data?.data?.data;
 };
@@ -13,7 +15,7 @@ class MenuService {
   constructor() {
     // Initialize Axios instance with base URL.
     this.api = axios.create({
-      baseURL: "http://127.0.0.1:3000/api/v1/menus",
+      baseURL: "https://oyster-app-s59tr.ondigitalocean.app/api/v1/menus",
       headers: {
         "Content-Type": "application/json",
       },

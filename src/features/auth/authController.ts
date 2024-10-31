@@ -16,7 +16,7 @@ class Auth {
 
   constructor() {
     this.api = axios.create({
-      baseURL: "http://localhost:3000/api/v1/users",
+      baseURL: "https://oyster-app-s59tr.ondigitalocean.app/api/v1/users",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${this.getToken()}`,

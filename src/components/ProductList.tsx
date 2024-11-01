@@ -49,7 +49,7 @@ const ProductList: FC<ProductListProps> = function ({ item }) {
           src={item.image}
           alt={item.name}
         />
-        <div className="px-6 py-4">
+        <div className="sm:px-6 py-4">
           <div className="mb-2 md:text-base line-clamp-1 text-sm font-bold capitalize">
             {item.name}
           </div>

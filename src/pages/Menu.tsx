@@ -1,4 +1,4 @@
-import { useState, FC, ChangeEvent, useEffect } from "react";
+import { useState, FC, ChangeEvent } from "react";
 import {
   Dialog,
   DialogBackdrop,

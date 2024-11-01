@@ -190,7 +190,7 @@ const CartTotal: FC<CartTotalProps> = function ({ setOpen }) {
             onClick={() => setOpen(false)}
             className="font-medium text-indigo-600 hover:text-indigo-500"
           >
-            Continue Shopping
+            <Link to="/menu">Continue Shopping</Link>
             <span aria-hidden="true"> &rarr;</span>
           </button>
         </p>

@@ -167,35 +167,24 @@ const MobileFilterDialog: FC<MobileFilterDialogProps> = function ({
   );
 };
 
-// CategoryList Component
 const CategoryList: FC<CategoryListProps> = ({ categories }) => {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const initialCategories = searchParams.getAll("category");
-    setSelectedCategories(initialCategories);
-  }, []);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    searchParams.delete("category");
-    selectedCategories.forEach((category) => {
-      searchParams.append("category", category);
-    });
-    navigate(`?${searchParams.toString()}`);
-  }, [navigate, selectedCategories]);
+  const queryParam = new URLSearchParams(location.search);
+  const selectedCategories = queryParam.getAll("category");
 
   const handleCategoryChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { checked, name } = event.target;
-    if (checked) {
-      setSelectedCategories((prevCategories) => [...prevCategories, name]);
+    const category = event.target.name;
+    if (event.target.checked) {
+      queryParam.append("category", category);
     } else {
-      setSelectedCategories((prevCategories) =>
-        prevCategories.filter((category) => category !== name),
+      const updatedCategories = selectedCategories.filter(
+        (cat) => cat !== category,
       );
+      queryParam.delete("category");
+      updatedCategories.forEach((cat) => queryParam.append("category", cat));
     }
+    navigate(`?${queryParam.toString()}`);
   };
 
   return (
@@ -311,9 +300,11 @@ export function SortMenu() {
 // ProductGrid Component
 function ProductGrid() {
   const location = useLocation();
+  const navigate = useNavigate();
   const queryParam = new URLSearchParams(location.search);
   const categories = queryParam.getAll("category");
   const search = queryParam.get("search");
+  const page = +(queryParam.get("page") || 1);
 
   const { data, error, isLoading } = useQuery<MenuItem[]>({
     queryKey: ["menuItem"],
@@ -334,33 +325,52 @@ function ProductGrid() {
     return matchesCategory && matchesSearch;
   });
 
-  if (!filteredData.length) return <NoData />;
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const paginatedData = filteredData.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage,
+  );
+
+  if (!paginatedData.length) return <NoData />;
+
+  const handlePageChange = (newPage: number) => {
+    queryParam.set("page", newPage.toString());
+    navigate(`?${queryParam.toString()}`);
+  };
 
   return (
-    <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
-      {filteredData.map((product) => (
-        <ProductList item={product} key={product.itemId} />
-      ))}
-    </div>
+    <>
+      <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
+        {paginatedData.map((product) => (
+          <ProductList item={product} key={product.itemId} />
+        ))}
+      </div>
+      <div className="flex justify-center mt-8">
+        <Pagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
+    </>
   );
 }
 
 function Search() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams();
-    if (searchTerm) {
-      searchParams.set("search", searchTerm);
-    } else {
-      searchParams.delete("search");
-    }
-    navigate(`?${searchParams.toString()}`);
-  }, [searchTerm, navigate]);
+  const queryParam = new URLSearchParams(location.search);
+  const searchTerm = queryParam.get("search") || "";
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+    const searchValue = event.target.value;
+    if (searchValue) {
+      queryParam.set("search", searchValue);
+    } else {
+      queryParam.delete("search");
+    }
+    navigate(`?${queryParam.toString()}`);
   };
 
   return (
@@ -458,9 +468,9 @@ export default function MenuList() {
             </div>
           </div>
           {/* Centering Pagination */}
-          <div className="flex justify-center mt-8">
+          {/* <div className="flex justify-center mt-8">
             <Pagination />
-          </div>
+          </div> */}
         </section>
       </main>
     </div>

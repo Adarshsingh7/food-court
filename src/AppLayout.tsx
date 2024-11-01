@@ -1,7 +1,5 @@
-/** @format */
-
-import { FC } from "react";
-import { Outlet } from "react-router-dom";
+import { FC, useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./ui/Footer";
 import { useQuery } from "@tanstack/react-query";
@@ -18,6 +16,12 @@ const AppLayout: FC = function () {
     retry: 2,
     retryDelay: 1000,
   });
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
 
   if (isLoading) return <BackdropLoader />;
   if (error instanceof Error)

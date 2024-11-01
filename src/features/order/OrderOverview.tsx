@@ -1,5 +1,3 @@
-/** @format */
-
 import { useQuery } from "@tanstack/react-query";
 import { FC } from "react";
 import {
@@ -72,7 +70,7 @@ const OrderList: FC<{ item: OrderItem }> = ({ item }) => {
           <span className="font-medium text-gray-900 dark:text-white">
             Product ID:
           </span>{" "}
-          {item._id}
+          {item._id?.slice(-10)}
         </p>
         <div className="flex items-center justify-end gap-4">
           <p className="text-base font-normal text-gray-900 dark:text-white">

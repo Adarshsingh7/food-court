@@ -9,7 +9,7 @@ const Sidebar = () => {
 	const links = ['dashboard', 'account', 'users', 'menu'];
 
 	return (
-		<div className='col-span-2 hidden sm:block'>
+		<div className='col-span-2 sm:block'>
 			<ul>
 				{links.map((link, index) => (
 					<NavLink

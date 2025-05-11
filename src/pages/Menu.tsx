@@ -19,12 +19,15 @@ import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
-import { Button } from "../ui/Button";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { MenuItem } from "../types/menuType";
+import { useLocation, useNavigate, useParams, Link } from "react-router-dom";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import NoData from "../ui/NoData";
+import PageNotFound from "./PageNotFound";
+import ErrorPage from "./ErrorPage";
+import FloatingCart from "../components/FloatingCart";
+import LocalStorageHandler from "../utils/LocalStorageHandler";
+import { useMenu } from "../features/menuFeatures/useMenu";
+import { ShoppingBag } from "@mui/icons-material";
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -75,41 +78,7 @@ const subCategories: SubCategory[] = [
   { name: "vegetable", href: "#" },
 ];
 
-const filters: Filter[] = [
-  // {
-  // 	id: 'cuisine',
-  // 	name: 'Cuisine',
-  // 	options: [
-  // 		{ value: 'italian', label: 'Italian', checked: false },
-  // 		{ value: 'american', label: 'American', checked: false },
-  // 		{ value: 'japanese', label: 'Japanese', checked: true },
-  // 		{ value: 'mexican', label: 'Mexican', checked: false },
-  // 		{ value: 'indian', label: 'Indian', checked: false },
-  // 		{ value: 'chinese', label: 'Chinese', checked: false },
-  // 	],
-  // },
-  // {
-  // 	id: 'dietary',
-  // 	name: 'Dietary Options',
-  // 	options: [
-  // 		{ value: 'vegetarian', label: 'Vegetarian', checked: false },
-  // 		{ value: 'vegan', label: 'Vegan', checked: false },
-  // 		{ value: 'gluten-free', label: 'Gluten-Free', checked: true },
-  // 		{ value: 'halal', label: 'Halal', checked: false },
-  // 		{ value: 'kosher', label: 'Kosher', checked: false },
-  // 	],
-  // },
-  // {
-  // 	id: 'portion',
-  // 	name: 'Portion Size',
-  // 	options: [
-  // 		{ value: 'small', label: 'Small', checked: false },
-  // 		{ value: 'medium', label: 'Medium', checked: false },
-  // 		{ value: 'large', label: 'Large', checked: true },
-  // 		{ value: 'family', label: 'Family Size', checked: false },
-  // 	],
-  // },
-];
+const filters: Filter[] = [];
 
 interface MobileFilterDialogProps {
   mobileFiltersOpen: boolean;
@@ -305,14 +274,14 @@ function ProductGrid() {
   const categories = queryParam.getAll("category");
   const search = queryParam.get("search");
   const page = +(queryParam.get("page") || 1);
-
-  const { data, error, isLoading } = useQuery<MenuItem[]>({
-    queryKey: ["menuItem"],
-  });
+  const { restroId } = useParams();
+  const { data, error, isLoading } = useMenu();
 
   if (isLoading) return <div>Loading...</div>;
-  if (error instanceof Error) return <div>Error: {error.message}</div>;
+  if (error instanceof Error) return <ErrorPage message={error.message} />;
   if (!data) return <div>No data found</div>;
+
+  if (!restroId) return <PageNotFound />;
 
   const filteredData = data.filter((product) => {
     const matchesCategory = categories.length
@@ -341,10 +310,12 @@ function ProductGrid() {
 
   return (
     <>
-      <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
-        {paginatedData.map((product) => (
-          <ProductList item={product} key={product.itemId} />
-        ))}
+      <div className="min-h-[70vh]">
+        <div className="grid md:grid-cols-3 grid-cols-2 gap-2">
+          {paginatedData.map((product) => (
+            <ProductList item={product} key={product.itemId} />
+          ))}
+        </div>
       </div>
       <div className="flex justify-center mt-8">
         <Pagination
@@ -411,6 +382,11 @@ function Search() {
 export default function MenuList() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const cartItem = useSelector((state: RootState) => state.cart.items);
+  const { restroId } = useParams();
+
+  if (!restroId) return <PageNotFound />;
+
+  LocalStorageHandler.set("restroId", restroId);
 
   return (
     <div className="sm:px-32 sm:py-10" id="menu">
@@ -418,29 +394,24 @@ export default function MenuList() {
         mobileFiltersOpen={mobileFiltersOpen}
         setMobileFiltersOpen={setMobileFiltersOpen}
       />
+      {cartItem.length ? (
+        <FloatingCart open={true} setOpen={() => null} />
+      ) : null}
       <main className="mx-auto max-w-7xl px-4 sm:py-6 sm:px-6 lg:px-8 bg-white rounded-3xl">
         {/* search input */}
         <div className="flex flex-col gap-5 my-5">
-          <div className="flex">
+          <div className="flex justify-center items-center">
             <Search />
-            <span className="w-32">
-              {cartItem.length !== 0 && (
-                <Link to="/order">
-                  <Button color="#8BC34A">Order Now</Button>
-                </Link>
-              )}
+            <span className="ml-4">
+              <Link to="/history">
+                <ShoppingBag className="text-gray-500" />
+              </Link>
             </span>
           </div>
+
           <div className="flex items-baseline justify-between border-b border-gray-200">
             <div className="flex items-center">
               {/* <SortMenu /> */}
-              {/* <button
-                type="button"
-                className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-              >
-                <span className="sr-only">View grid</span>
-                <Squares2X2Icon aria-hidden="true" className="h-5 w-5" />
-              </button> */}
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(true)}
@@ -467,10 +438,6 @@ export default function MenuList() {
               <ProductGrid />
             </div>
           </div>
-          {/* Centering Pagination */}
-          {/* <div className="flex justify-center mt-8">
-            <Pagination />
-          </div> */}
         </section>
       </main>
     </div>

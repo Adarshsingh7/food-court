@@ -9,7 +9,7 @@ class OrderService {
   constructor() {
     // Initialize Axios instance with base URL.
     this.api = axios.create({
-      baseURL: "https://plankton-app-2dhbr.ondigitalocean.app/api/v1/orders",
+      baseURL: "http://localhost:8080/api/v1/orders",
       headers: {
         "Content-Type": "application/json",
       },

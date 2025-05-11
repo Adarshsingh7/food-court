@@ -6,12 +6,14 @@ import {
   HiMiniShoppingBag,
   HiMiniTruck,
 } from "react-icons/hi2";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { order } from "./order";
 import NoData from "../../ui/NoData";
 import BackdropLoader from "../../components/BackdropLoader";
 import { Order, OrderItem } from "../../types/orderType";
 import { MenuItem } from "../../types/menuType";
+import { useMenu } from "../menuFeatures/useMenu";
+import { ChevronLeft } from "lucide-react";
 
 function OrderOverview() {
   const { id } = useParams();
@@ -19,11 +21,23 @@ function OrderOverview() {
     queryKey: ["order"],
     queryFn: () => order.getOrder(id || "0"),
   });
+  const navigate = useNavigate();
+  const handleReturnToMenu = function () {
+    navigate(-2);
+  };
   if (isLoading) return <BackdropLoader />;
   if (!id || error || !data) return <NoData />;
   return (
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
+        <div className="my-6">
+          <button
+            onClick={handleReturnToMenu}
+            className="rounded-lg flex gap-2 justify-between items-center border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+          >
+            <ChevronLeft /> Back to Menu
+          </button>
+        </div>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
           Take screenshot or save order id #{data._id.slice(-10)}
         </h2>
@@ -43,7 +57,7 @@ function OrderOverview() {
 }
 
 const OrderList: FC<{ item: OrderItem }> = ({ item }) => {
-  const { data } = useQuery<MenuItem[]>({ queryKey: ["menuItem"] });
+  const { data } = useMenu();
   const product = data?.find((p) => p._id === item.menuItem);
   if (!product) return null;
   return (

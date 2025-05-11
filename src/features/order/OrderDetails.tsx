@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import NoData from "../../ui/NoData";
@@ -8,6 +8,8 @@ import { order } from "./order";
 import { useForm } from "react-hook-form";
 import { useCreateOrder } from "./useCreateOrder";
 import BackdropLoader from "../../components/BackdropLoader";
+import { Order } from "../../types/orderType";
+import { useParams } from "react-router-dom";
 
 interface RecipientType {
   name: string;
@@ -79,24 +81,40 @@ const RecipientForm: FC<{
   items: CartItemType[];
   amount: number;
 }> = ({ items, amount }) => {
-  const { register, handleSubmit } = useForm<RecipientType>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    // setError,
+    clearErrors,
+  } = useForm<RecipientType>();
   const { orderItem, ordering } = useCreateOrder();
+  const [formError, setFormError] = useState<string | null>(null);
+  const { restroId } = useParams();
 
   async function submitForm(data: RecipientType) {
-    orderItem({
-      totalAmount: amount,
-      status: "new",
-      paymentStatus: "pending",
-      delivery: "dine-in",
-      items: items.map((item) => ({
-        menuItem: item.item._id + "",
-        price: item.item.price,
-        quantity: item.quantity,
-      })),
-      recipientName: data.name,
-      recipientEmail: data.email,
-      recipientPhoneNumber: data.contact,
-    });
+    try {
+      clearErrors();
+      setFormError(null);
+      const orderData: Partial<Order> = {
+        totalAmount: amount,
+        status: "new",
+        paymentStatus: "pending",
+        delivery: "dine-in",
+        items: items.map((item) => ({
+          menuItem: item.item._id,
+          price: item.item.price,
+          quantity: item.quantity,
+        })),
+        recipientName: data.name,
+        recipientEmail: data.email,
+        recipientPhoneNumber: data.contact,
+        owner: restroId,
+      };
+      orderItem(orderData);
+    } catch (error) {
+      setFormError("Failed to place the order. Please try again.");
+    }
   }
 
   if (ordering) return <BackdropLoader />;
@@ -104,25 +122,63 @@ const RecipientForm: FC<{
   return (
     <div className="mt-6 bg-white rounded-lg">
       <h2 className="font-medium text-lg mb-4">Recipient Details</h2>
+      {formError && (
+        <div className="text-red-600 text-sm mb-3">{formError}</div>
+      )}
       <form onSubmit={handleSubmit(submitForm)} className="space-y-3">
-        <input
-          type="text"
-          {...register("name", { required: true })}
-          placeholder="Full Name"
-          className="w-full rounded-md py-2 px-3 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        <input
-          type="email"
-          {...register("email", { required: true })}
-          placeholder="Email Address"
-          className="w-full rounded-md py-2 px-3 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        <input
-          type="tel"
-          {...register("contact", { required: true })}
-          placeholder="Phone Number"
-          className="w-full rounded-md py-2 px-3 border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
+        <div>
+          <input
+            type="text"
+            {...register("name", { required: "Full Name is required" })}
+            placeholder="Full Name"
+            className={`w-full rounded-md py-2 px-3 border text-sm focus:outline-none focus:ring-2 ${
+              errors.name
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-indigo-500"
+            }`}
+          />
+          {errors.name && (
+            <p className="text-red-600 text-xs mt-1">{errors.name.message}</p>
+          )}
+        </div>
+        <div>
+          <input
+            type="email"
+            {...register("email")}
+            placeholder="Email Address"
+            className={`w-full rounded-md py-2 px-3 border text-sm focus:outline-none focus:ring-2 ${
+              errors.email
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-indigo-500"
+            }`}
+          />
+          {errors.email && (
+            <p className="text-red-600 text-xs mt-1">{errors.email.message}</p>
+          )}
+        </div>
+        <div>
+          <input
+            type="tel"
+            {...register("contact", {
+              required: "Phone Number is required",
+              pattern: {
+                value: /^[0-9]{10}$/,
+                message: "Phone number must be 10 digits",
+              },
+            })}
+            placeholder="Phone Number"
+            className={`w-full rounded-md py-2 px-3 border text-sm focus:outline-none focus:ring-2 ${
+              errors.contact
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-indigo-500"
+            }`}
+          />
+          {errors.contact && (
+            <p className="text-red-600 text-xs mt-1">
+              {errors.contact.message}
+            </p>
+          )}
+        </div>
         <button
           type="submit"
           className="w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition-colors"

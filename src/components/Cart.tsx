@@ -175,7 +175,7 @@ const CartTotal: FC<CartTotalProps> = function ({ setOpen }) {
       </p>
       <div className="mt-6">
         <Link
-          to="/order"
+          to="order"
           onClick={() => setOpen(false)}
           className="flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
         >

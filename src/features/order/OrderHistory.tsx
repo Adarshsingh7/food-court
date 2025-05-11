@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import BackdropLoader from "../../components/BackdropLoader";
 import { order } from "../order/order";
 import ErrorPage from "../../pages/ErrorPage";
@@ -12,6 +12,7 @@ import {
 import { Order } from "../../types/orderType";
 import { formatDate } from "../../utils/dateManager";
 import toast from "react-hot-toast";
+import { ChevronLeft } from "lucide-react";
 
 interface SelectProps {
   label: string;
@@ -126,6 +127,11 @@ export default function History() {
     }
   }, [data, history, orderStatus]);
 
+  const navigate = useNavigate();
+  const handleReturnToMenu = function () {
+    navigate(-1);
+  };
+
   if (isLoading) return <BackdropLoader />;
   if (error) return <ErrorPage message="An error occurred. Please try again" />;
 
@@ -133,6 +139,14 @@ export default function History() {
     <section className="bg-white py-8 antialiased dark:bg-gray-900 md:py-16 min-h-screen">
       <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
         <div className="mx-auto max-w-5xl">
+          <div className="my-6">
+            <button
+              onClick={handleReturnToMenu}
+              className="rounded-lg flex gap-2 justify-between items-center border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
+            >
+              <ChevronLeft /> Back to Menu
+            </button>
+          </div>
           <div className="gap-4 sm:flex sm:items-center sm:justify-between">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white sm:text-2xl">
               My orders

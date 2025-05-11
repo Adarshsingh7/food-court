@@ -1,13 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { MenuItem } from "../../types/menuType";
-
-export const fetchMenuItems = async () => {
-  const data = await axios.get(
-    "https://plankton-app-2dhbr.ondigitalocean.app/api/v1/menus",
-  );
-
-  return data?.data?.data?.data;
-};
+import LocalStorageHandler from "../../utils/LocalStorageHandler";
 
 class MenuService {
   private api: AxiosInstance;
@@ -15,7 +8,7 @@ class MenuService {
   constructor() {
     // Initialize Axios instance with base URL.
     this.api = axios.create({
-      baseURL: "https://plankton-app-2dhbr.ondigitalocean.app/api/v1/menus",
+      baseURL: "http://localhost:8080/api/v1/menus",
       headers: {
         "Content-Type": "application/json",
       },
@@ -29,9 +22,11 @@ class MenuService {
 
   // Get all orders
   public async getAllMenu(): Promise<MenuItem[]> {
+    const restroId = LocalStorageHandler.get("restroId");
     try {
+      if (!restroId) throw new Error("restro id required");
       const response: AxiosResponse<{ data: { data: MenuItem[] } }> =
-        await this.api.get("/");
+        await this.api.get(`/?owner=${restroId}`);
       return response.data.data.data;
     } catch (error) {
       console.error("Error fetching menu:", error);

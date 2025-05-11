@@ -4,7 +4,6 @@ import { FC } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AppLayout from "./AppLayout";
-import Hero from "./pages/Hero";
 import Menu from "./pages/Menu";
 import { Provider } from "react-redux";
 import store from "./store.ts";
@@ -13,22 +12,17 @@ import User from "./pages/User.tsx";
 import ManageUser from "./pages/ManageUser.tsx";
 import OrderDetails from "./features/order/OrderDetails.tsx";
 import Login from "./pages/Login.tsx";
-import ProductOverview from "./pages/productOverview.tsx";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import OrderOverview from "./features/order/OrderOverview.tsx";
-import Dashboard from "./pages/Dashboard.tsx";
-import Account from "./features/dashboard/Account.tsx";
-import DashboardOverview from "./features/dashboard/DashboardOverview.tsx";
-import MenuControl from "./features/dashboard/MenuControl.tsx";
 import OrderHistory from "./features/order/OrderHistory.tsx";
-import Protected from "./components/Protected.tsx";
 import Contact from "./pages/Contact.tsx";
 import Event from "./pages/Event.tsx";
+import PageNotFound from "./pages/PageNotFound.tsx";
+import RestroListPage from "./pages/RestroListPage.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // staleTime: 60 * 1000,
       staleTime: 0,
     },
   },
@@ -40,27 +34,22 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Hero />,
+        element: <RestroListPage />,
       },
       {
         path: "/menu",
         children: [
-          { path: "", element: <Menu /> },
-          { path: "/menu/:id", element: <ProductOverview /> },
-        ],
-      },
-      {
-        path: "/dashboard",
-        element: (
-          <Protected>
-            <Dashboard />
-          </Protected>
-        ),
-        children: [
-          { path: "account", element: <Account /> },
-          { path: "users", element: <Account /> },
-          { path: "dashboard", element: <DashboardOverview /> },
-          { path: "menu", element: <MenuControl /> },
+          { path: "", element: <PageNotFound /> }, // /menu
+          {
+            path: ":restroId",
+            children: [
+              { path: "", element: <Menu /> },
+              {
+                path: "order",
+                element: <OrderDetails />,
+              },
+            ],
+          },
         ],
       },
       {
@@ -82,10 +71,6 @@ const router = createBrowserRouter([
             <ManageUser />
           </AuthRoute>
         ),
-      },
-      {
-        path: "/order",
-        element: <OrderDetails />,
       },
       {
         path: "/history",

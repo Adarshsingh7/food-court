@@ -7,14 +7,8 @@ import { RootState, AppDispatch } from "../store.ts";
 import QuantityButton from "./QuantityButtons.tsx";
 import { removeItem } from "../slice/cartSlice.ts";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@headlessui/react";
 
-interface FloatingCartTabProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
-
-const FloatingCartTab = ({ open, setOpen }: FloatingCartTabProps) => {
+const FloatingCartTab = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -38,10 +32,10 @@ const FloatingCartTab = ({ open, setOpen }: FloatingCartTabProps) => {
     setTimeout(() => setIsAnimating(false), 300);
   };
 
-  const handleViewFullCart = () => {
-    setIsExpanded(false);
-    setOpen(true);
-  };
+  // const handleViewFullCart = () => {
+  //   setIsExpanded(false);
+  //   setOpen(true);
+  // };
 
   const handleCheckout = () => {
     setIsExpanded(false);

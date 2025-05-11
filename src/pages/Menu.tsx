@@ -394,9 +394,7 @@ export default function MenuList() {
         mobileFiltersOpen={mobileFiltersOpen}
         setMobileFiltersOpen={setMobileFiltersOpen}
       />
-      {cartItem.length ? (
-        <FloatingCart open={true} setOpen={() => null} />
-      ) : null}
+      {cartItem.length ? <FloatingCart /> : null}
       <main className="mx-auto max-w-7xl px-4 sm:py-6 sm:px-6 lg:px-8 bg-white rounded-3xl">
         {/* search input */}
         <div className="flex flex-col gap-5 my-5">

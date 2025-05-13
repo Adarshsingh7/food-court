@@ -7,11 +7,7 @@ import AppLayout from "./AppLayout";
 import Menu from "./pages/Menu";
 import { Provider } from "react-redux";
 import store from "./store.ts";
-import AuthRoute from "./components/AuthRoute.tsx";
-import User from "./pages/User.tsx";
-import ManageUser from "./pages/ManageUser.tsx";
 import OrderDetails from "./features/order/OrderDetails.tsx";
-import Login from "./pages/Login.tsx";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import OrderOverview from "./features/order/OrderOverview.tsx";
 import OrderHistory from "./features/order/OrderHistory.tsx";
@@ -19,6 +15,7 @@ import Contact from "./pages/Contact.tsx";
 import Event from "./pages/Event.tsx";
 import PageNotFound from "./pages/PageNotFound.tsx";
 import RestroListPage from "./pages/RestroListPage.tsx";
+import TermsAndConditions from "./pages/TermsAndConditions.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,28 +50,12 @@ const router = createBrowserRouter([
         ],
       },
       {
-        path: "/cart",
-        element: <div>cart</div>,
-      },
-      {
-        path: "/user",
-        element: <User />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/allusers",
-        element: (
-          <AuthRoute roles={["admin"]}>
-            <ManageUser />
-          </AuthRoute>
-        ),
-      },
-      {
         path: "/history",
         element: <OrderHistory />,
+      },
+      {
+        path: "/terms-and-condition",
+        element: <TermsAndConditions />,
       },
       {
         path: "/contact",

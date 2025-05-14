@@ -6,6 +6,9 @@ import { Badge } from "@mui/material";
 import { MenuItem } from "../types/menuType";
 import { totalAddedQuantity } from "../slice/cartSlice";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 interface ProductListProps {
   item: MenuItem;
 }
@@ -50,9 +53,11 @@ const ProductList: FC<ProductListProps> = function ({ item }) {
     >
       <div className="w-full bg-white rounded-lg shadow-md overflow-hidden">
         <div className="relative aspect-[4/3] overflow-hidden">
-          <img
+          <LazyLoadImage
             className="absolute inset-0 w-full h-full object-cover"
             src={item.image}
+            effect="opacity"
+            placeholderSrc={item.name}
             alt={item.name}
           />
         </div>

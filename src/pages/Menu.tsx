@@ -28,6 +28,7 @@ import FloatingCart from "../components/FloatingCart";
 import LocalStorageHandler from "../utils/LocalStorageHandler";
 import { useMenu } from "../features/menuFeatures/useMenu";
 import { ShoppingBag } from "@mui/icons-material";
+import BackdropLoader from "../components/BackdropLoader";
 
 function classNames(...classes: (string | false | null | undefined)[]): string {
   return classes.filter(Boolean).join(" ");
@@ -277,7 +278,7 @@ function ProductGrid() {
   const { restroId } = useParams();
   const { data, error, isLoading } = useMenu();
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <BackdropLoader />;
   if (error instanceof Error) return <ErrorPage message={error.message} />;
   if (!data) return <div>No data found</div>;
 
